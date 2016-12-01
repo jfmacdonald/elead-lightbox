@@ -26,6 +26,7 @@ $field-font-size: 1rem;
   &__fieldset {
     display: table-cell;
     // border: hidden;
+    border: 1px groove #4c4c4d;
     font-size: $cta-font-size;
     padding: 0;
 
@@ -38,10 +39,10 @@ $field-font-size: 1rem;
     font-size: inherit;
     width: 7em;
     padding: 0.5 * $cta-font-size;
-    border: hidden;
+    border-width: 0 !important;
     text-align: center;
     text-transform: capitalize;
-    @include border-left-radius(2em);
+    @include border-left-radius($cta-font-size);
   }
   &__button {
     display: inline-block;
@@ -50,7 +51,7 @@ $field-font-size: 1rem;
     font-size: inherit;
     text-align: center;
     text-transform: capitalize;
-    border: hidden;
+    border: hidden !important;
     @include border-right-radius($cta-font-size);
   }
 

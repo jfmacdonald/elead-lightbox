@@ -7,6 +7,7 @@
   margin: 2rem auto; }
   .elead-lightbox-cta__fieldset {
     display: table-cell;
+    border: 1px groove #4c4c4d;
     font-size: 1.2rem;
     padding: 0;
     border-bottom-right-radius: 2em;
@@ -18,11 +19,11 @@
     font-size: inherit;
     width: 7em;
     padding: 0.6rem;
-    border: hidden;
+    border-width: 0 !important;
     text-align: center;
     text-transform: capitalize;
-    border-bottom-left-radius: 2em;
-    border-top-left-radius: 2em; }
+    border-bottom-left-radius: 1.2rem;
+    border-top-left-radius: 1.2rem; }
   .elead-lightbox-cta__button {
     display: inline-block;
     width: 8em;
@@ -30,7 +31,7 @@
     font-size: inherit;
     text-align: center;
     text-transform: capitalize;
-    border: hidden;
+    border: hidden !important;
     border-bottom-right-radius: 1.2rem;
     border-top-right-radius: 1.2rem; }
 
