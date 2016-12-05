@@ -87,13 +87,13 @@ function get_elead_lightbox_form() {
 
 function elead_lightbox_form() {
 	$form = get_elead_lightbox_form();
-	echo $form->get_html();
+	return $form->get_form();
 }
 
 function elead_lightbox_cta() {
 	$form = get_elead_lightbox_form();
 	$cta = new ELeadLightboxCTA( $form );
-	echo $cta->get_html();
+	return $cta->get_html();
 }
 
 function elead_lightbox_shortcode_init() {
