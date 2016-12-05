@@ -7,33 +7,88 @@
   margin: 2rem auto; }
   .elead-lightbox-cta__fieldset {
     display: table-cell;
-    border: 1px groove #4c4c4d;
+    border: 4px solid #f8a13c;
+    overflow: hidden;
     font-size: 1.2rem;
     padding: 0;
-    border-bottom-right-radius: 2em;
-    border-top-right-radius: 2em;
-    border-bottom-left-radius: 2em;
-    border-top-left-radius: 2em; }
-  .elead-lightbox-cta__input {
-    display: inline-block;
+    position: relative;
+    border-bottom-right-radius: 2.4rem;
+    border-top-right-radius: 2.4rem;
+    border-bottom-left-radius: 2.4rem;
+    border-top-left-radius: 2.4rem;
+    background-color: white; }
+  .elead-lightbox-cta__input[type="text"] {
+    display: block;
+    float: left;
     font-size: inherit;
-    width: 7em;
+    width: 14em;
     padding: 0.6rem;
+    margin-right: -1em;
     border-width: 0 !important;
     text-align: center;
-    text-transform: capitalize;
-    border-bottom-left-radius: 1.2rem;
-    border-top-left-radius: 1.2rem; }
+    text-transform: capitalize; }
   .elead-lightbox-cta__button {
-    display: inline-block;
-    width: 8em;
+    display: block;
+    float: right;
+    width: 10em;
     padding: 0.6rem;
     font-size: inherit;
     text-align: center;
     text-transform: capitalize;
-    border: hidden !important;
-    border-bottom-right-radius: 1.2rem;
-    border-top-right-radius: 1.2rem; }
+    border: 1px solid #f8a13c !important;
+    color: white;
+    background-color: #f8a13c; }
+
+.elead-lightbox-form {
+  position: relative;
+  width: 100%;
+  margin: auto;
+  min-height: 20em;
+  font-size: 1em;
+  color: #4c4c4d; }
+  .elead-lightbox-form legend {
+    color: inherit; }
+  .elead-lightbox-form__fieldset {
+    display: block;
+    position: relative;
+    width: 90%;
+    border-width: 0;
+    padding: 0; }
+  .elead-lightbox-form__input {
+    display: block;
+    position: relative;
+    width: 100%;
+    float: left; }
+    .elead-lightbox-form__input input[type="text"] {
+      display: block;
+      position: relative;
+      box-sizing: border-box;
+      padding: 0.5em;
+      width: 100%;
+      margin: 0.5em 0;
+      border-radius: 0.2em;
+      font-size: inherit;
+      text-transform: capitalize; }
+  .elead-lightbox-form__checkbox {
+    display: block;
+    float: left;
+    color: inherit; }
+    .elead-lightbox-form__checkbox input {
+      font-size: inherit; }
+  .elead-lightbox-form__submit {
+    margin: 2em auto;
+    display: block; }
+    .elead-lightbox-form__submit input {
+      display: block;
+      width: 75%;
+      height: 3rem;
+      border-radius: 3rem;
+      border-width: 0;
+      margin: 1em auto;
+      font-size: 18px;
+      text-transform: uppercase;
+      color: white;
+      background-color: #f8a13c; }
 
 .elead-lightbox-modal {
   display: none;
@@ -91,51 +146,8 @@
     margin-top: 1rem;
     display: block;
     width: 100%; }
-
-.elead-lightbox-form {
-  position: relative;
-  width: 100%;
-  margin: auto;
-  min-height: 20em;
-  font-size: 1em; }
-  .elead-lightbox-form__fieldset {
-    display: block;
-    position: relative;
-    width: 90%;
-    border-width: 0;
-    padding: 0;
+  .elead-lightbox-modal .elead-lightbox-form fieldset {
     margin: auto; }
-  .elead-lightbox-form__input {
-    display: block;
-    position: relative;
-    width: 100%;
-    float: left; }
-    .elead-lightbox-form__input input[type="text"] {
-      display: block;
-      position: relative;
-      box-sizing: border-box;
-      padding: 0.5em;
-      width: 100%;
-      margin: 0.5em 0;
-      border-radius: 0.2em;
-      font-size: inherit;
-      text-transform: capitalize; }
-  .elead-lightbox-form__checkbox {
-    display: block;
-    float: left; }
-    .elead-lightbox-form__checkbox input {
-      font-size: inherit; }
-  .elead-lightbox-form__submit {
-    margin: 2em auto;
-    display: block; }
-    .elead-lightbox-form__submit input {
-      display: block;
-      width: 75%;
-      height: 3rem;
-      border-radius: 3rem;
-      margin: 1em auto;
-      font-size: 18px;
-      text-transform: uppercase; }
 
 @media screen and (min-width: 620px) {
   .elead-lightbox-modal__lightbox {
@@ -146,14 +158,13 @@
       content: " ";
       display: block;
       clear: both; }
-
-  .elead-lightbox-form__input {
+  .elead-lightbox-modal .elead-lightbox-form__input {
     width: 50%; }
-    .elead-lightbox-form__input input[type="text"] {
+    .elead-lightbox-modal .elead-lightbox-form__input input[type="text"] {
       width: 95%; }
-  .elead-lightbox-form__input:nth-of-type(2n) input {
+  .elead-lightbox-modal .elead-lightbox-form__input:nth-of-type(2n) input {
     float: right; }
-  .elead-lightbox-form__submit input {
+  .elead-lightbox-modal .elead-lightbox-form__submit input {
     width: 50%; } }
 
 /*# sourceMappingURL=elead-lightbox-public.css.map */
