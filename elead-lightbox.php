@@ -11,7 +11,7 @@
  * @wordpress-plugin
  * Plugin Name:       ELead Lightbox
  * Plugin URI:        @TODO
- * Description:       @TODO
+ * Description:       CTA and form for submitting a quote request to a CRM.
  * Version:           1.0.0
  * Author:            John Farrell MacDonald
  * Author URI:        https://jfmacdonald.com
