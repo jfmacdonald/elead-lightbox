@@ -7,37 +7,48 @@
   margin: 2rem auto; }
   .elead-lightbox-cta__fieldset {
     display: table-cell;
-    border: 4px solid #f8a13c;
+    border: 0.25rem solid #f8a13c;
     overflow: hidden;
     font-size: 1.2rem;
     padding: 0;
     position: relative;
+    background-color: white;
+    width: 100%;
+    height: 3.6rem;
     border-bottom-right-radius: 2.4rem;
     border-top-right-radius: 2.4rem;
     border-bottom-left-radius: 2.4rem;
-    border-top-left-radius: 2.4rem;
-    background-color: white; }
+    border-top-left-radius: 2.4rem; }
   .elead-lightbox-cta__input[type="text"] {
     display: block;
     float: left;
     font-size: inherit;
-    width: 14em;
-    padding: 0.6rem;
+    width: 50%;
+    height: 3.1rem;
+    padding: 0;
     margin-right: -1em;
     border-width: 0 !important;
     text-align: center;
-    text-transform: capitalize; }
+    text-transform: capitalize;
+    vertical-align: top; }
   .elead-lightbox-cta__button {
     display: block;
     float: right;
-    width: 10em;
-    padding: 0.6rem;
+    width: 50%;
+    height: 3.1rem;
     font-size: inherit;
     text-align: center;
     text-transform: capitalize;
-    border: 1px solid #f8a13c !important;
+    border-width: 0 !important;
     color: white;
     background-color: #f8a13c; }
+  .elead-lightbox-cta__error {
+    margin: 1rem auto;
+    width: 100%;
+    color: #f8a13c;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold; }
 
 .elead-lightbox-form {
   position: relative;
@@ -45,7 +56,9 @@
   margin: auto;
   min-height: 20em;
   font-size: 1em;
-  color: #4c4c4d; }
+  color: white;
+  background-color: rgba(51, 51, 51, 0.5);
+  padding: 1rem !important; }
   .elead-lightbox-form legend {
     color: inherit; }
   .elead-lightbox-form__fieldset {
@@ -135,9 +148,11 @@
     z-index: 5001;
     cursor: pointer; }
   .elead-lightbox-modal__header {
-    margin-top: 1rem;
     display: block;
-    width: 100%; }
+    color: black;
+    font-size: 1.4em;
+    width: 90%;
+    margin: 1rem auto; }
   .elead-lightbox-modal__body {
     margin-top: 1rem;
     display: block;
@@ -146,10 +161,21 @@
     margin-top: 1rem;
     display: block;
     width: 100%; }
-  .elead-lightbox-modal .elead-lightbox-form fieldset {
-    margin: auto; }
+  .elead-lightbox-modal .elead-lightbox-form {
+    color: #4c4c4d;
+    background-color: transparent;
+    padding: 0; }
+    .elead-lightbox-modal .elead-lightbox-form fieldset {
+      margin: auto; }
 
 @media screen and (min-width: 620px) {
+  .elead-lightbox-cta__fieldset {
+    font-size: 1.44rem; }
+  .elead-lightbox-cta__input {
+    width: 18rem; }
+  .elead-lightbox-cta__button {
+    width: 12rem; }
+
   .elead-lightbox-modal__lightbox {
     max-width: 500px;
     margin-left: auto;

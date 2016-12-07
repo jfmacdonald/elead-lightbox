@@ -16,9 +16,11 @@ $large: 1024px;
 $lightbox-width-small: 300px;
 $lightbox-width-medium: 500px;
 $lightbox-min-height: 400px;
-$cta-font-size: 1.2rem;
 $field-font-size: 1rem;
 $linkcolor: #f8a13c;
+$cta-font-size: 1.2rem;
+$cta-border: 0.25rem;
+$cta-width: 30rem;
 
 #{$base}-cta {
   display: table;
@@ -26,41 +28,52 @@ $linkcolor: #f8a13c;
 
   &__fieldset {
     display: table-cell;
-    border: 4px solid $linkcolor;
+    border: $cta-border solid $linkcolor;
     overflow: hidden;
     font-size: $cta-font-size;
     padding: 0;
     position: relative;
+    background-color: white;
+    width: 100%;
+    height: 3*$cta-font-size;
+    //line-height: 3*$cta-font-size;
 
     @include border-right-radius(2*$cta-font-size);
     @include border-left-radius(2*$cta-font-size);
-    background-color: white;
   }
 
   &__input[type="text"] {
     display: block;
     float: left;
     font-size: inherit;
-    width: 14em;
-    padding: 0.5 * $cta-font-size;
+    width: 50%;
+    height: 3*$cta-font-size - 2*$cta-border;
+    padding: 0;
     margin-right: -1em;
     border-width: 0 !important;
     text-align: center;
     text-transform: capitalize;
-    // @include border-left-radius($cta-font-size);
+    vertical-align: top;
   }
   &__button {
     display: block;
     float: right;
-    width: 10em;
-    padding: 0.5 * $cta-font-size;
+    width: 50%;
+    height: 3*$cta-font-size - 2*$cta-border;
     font-size: inherit;
     text-align: center;
     text-transform: capitalize;
-    border: 1px solid $linkcolor !important;
+    border-width: 0 !important;
     color: white;
     background-color: $linkcolor;
-    // @include border-right-radius($cta-font-size);
+  }
+  &__error {
+    margin: 1rem auto;
+    width: 100%;
+    color: $linkcolor;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
   }
 
 }
@@ -71,8 +84,9 @@ $linkcolor: #f8a13c;
   margin: auto;
   min-height: 20em;
   font-size: 1em;
-  color: #4c4c4d;
-  // background-color: #a0a5aa;
+  color: white;
+  background-color: rgba( #333333, 0.5);
+  padding: 1rem !important;
 
   legend {
     color: inherit;
@@ -147,7 +161,6 @@ $linkcolor: #f8a13c;
     height: 100%;
     vertical-align: middle;
   }
-
   &__lightbox {
     display: block;
     position: relative;
@@ -175,9 +188,11 @@ $linkcolor: #f8a13c;
     cursor: pointer;
   }
   &__header {
-    margin-top: 1rem;
     display: block;
-    width: 100%;
+    color: black;
+    font-size: 1.4em;
+    width: 90%;
+    margin: 1rem auto;
   }
   &__body {
     margin-top: 1rem;
@@ -191,6 +206,9 @@ $linkcolor: #f8a13c;
   }
 
   #{$base}-form {
+    color: #4c4c4d;
+    background-color: transparent;
+    padding: 0;
     fieldset {
       margin: auto;
     }
@@ -199,6 +217,19 @@ $linkcolor: #f8a13c;
 }
 
 @media screen and (min-width: $medium) {
+
+  //$cta-font-size: 1.6rem;
+  #{$base}-cta {
+    &__fieldset {
+      font-size: 1.2 * $cta-font-size;
+    }
+    &__input {
+      width: 0.6*$cta-width;
+    }
+    &__button {
+      width: 0.4*$cta-width;
+    }
+  }
 
   #{$base}-modal {
     &__lightbox {

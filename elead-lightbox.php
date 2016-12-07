@@ -68,8 +68,15 @@ function elead_lightbox_register_public_hooks() {
 // add_action('wp_enqueue_scripts', 'elead_lightbox_register_public_hooks');
 
 function get_elead_lightbox_form() {
+	$rtn_page = get_page_by_path('thank-you');
+	if ( $rtn_page ) {
+		$rtn_url = get_page_uri($rtn_page);
+	} else {
+		$rtn_url = get_page_uri();
+	}
 	$form     = new ELeadLightboxForm(
-		$endpoint = 'https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8'
+		$endpoint = 'https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8',
+		$returnURL = $rtn_url
 	);
 	$services = array(
 		'Solar',

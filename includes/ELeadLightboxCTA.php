@@ -15,7 +15,7 @@ class ELeadLightboxCTA {
 	private $modal = null;
 	protected static $ctan = 0;
 
-	function __construct( $form, $call_to_action = 'free quote', $input = 'zipcode' ) {
+	function __construct( $form, $call_to_action = 'free quote', $input = 'zip code' ) {
 		self::$ctan ++;
 		$this->cta = trim( strip_tags( $call_to_action ) );
 		$this->id  = self::PREFIX . '-' . self::$ctan;
@@ -45,6 +45,7 @@ class ELeadLightboxCTA {
 		$html .= sprintf( '      <button class="%s__button" type="button" name="%s"> %s </button>' . PHP_EOL,
 			self::PREFIX, self::PREFIX, ucwords( strtolower( $this->cta ) ) );
 		$html .= '    </fieldset>' . PHP_EOL;
+		$html .= sprintf( '   <div class="%s__error"></div>'. PHP_EOL, self::PREFIX );
 		$html .= '  </form>' . PHP_EOL;
 
 		return $html;
