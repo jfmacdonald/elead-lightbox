@@ -298,6 +298,20 @@
             });
         }
 
+        var $zipbox = $('.elead-lightbox-cta__input');
+        if ($zipbox.length) {
+            $zipbox.on('keypress', function(e) {
+               if ( e.keyCode === 13 ) {
+                   e.preventDefault();
+                   var $form = $(this).closest('form');
+                   var $modal = $form.next('.elead-lightbox-modal');
+                   if ($form.length && $modal.length ) {
+                       handle_cta($form,$modal);
+                   }
+               }
+            });
+        }
+
         var $modal = $('.elead-lightbox-modal');
         if ($modal.length) {
             $modal.find('.elead-lightbox-modal__close').on('click', function (e) {

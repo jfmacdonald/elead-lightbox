@@ -17,7 +17,7 @@ class ELeadLightboxForm {
 	private $formid = '';
 	private $legend = 'Please provide the following information so we may contact you.';
 
-	function __construct( $endpoint = '#', $returnURL = '#', $call_to_action = 'get a free quote' ) {
+	function __construct( $endpoint = '#', $returnURL = '#', $call_to_action = 'free quote' ) {
 		if ( $endpoint ) {
 			$this->action = $endpoint;
 		}
