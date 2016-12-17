@@ -6,9 +6,6 @@
  * Date: 11/28/16
  * Time: 4:34 PM
  */
-
-
-
 class ELeadLightboxModal {
 
 	const PREFIX = 'elead-lightbox-modal';
@@ -23,10 +20,10 @@ class ELeadLightboxModal {
 	 *
 	 * @param $content
 	 */
-	function __construct($content) {
+	function __construct( $content ) {
 		self::$modaln ++;
-		$this->id = sprintf('%s-%d', self::PREFIX, self::$modaln);
-		if ($content) {
+		$this->id = sprintf( '%s-%d', self::PREFIX, self::$modaln );
+		if ( $content ) {
 			$this->body = $content;
 		}
 	}
@@ -34,21 +31,21 @@ class ELeadLightboxModal {
 	/**
 	 * @param $html
 	 */
-	function set_header($html) {
+	function set_header( $html ) {
 		$this->header = $html;
 	}
 
 	/**
 	 * @param $html
 	 */
-	function set_body($html) {
+	function set_body( $html ) {
 		$this->body = $html;
 	}
 
 	/**
 	 * @param $html
 	 */
-	function set_footer($html) {
+	function set_footer( $html ) {
 		$this->footer = $html;
 	}
 
@@ -56,9 +53,9 @@ class ELeadLightboxModal {
 	 * @return string
 	 */
 	function get_html() {
-	    if ( ! $this->body ) {
-	        return '';
-        }
+		if ( ! $this->body ) {
+			return '';
+		}
 
 		$html = "  <!-- Modal eLead -->\n";
 		$html .= sprintf( '  <div id="%s" class="%s" aria-hidden="true">' . "\n", $this->id, self::PREFIX );

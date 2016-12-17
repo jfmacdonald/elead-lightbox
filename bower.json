@@ -1,0 +1,23 @@
+{
+  "name": "eleadlightbox",
+  "main": "elead-lightbox.php",
+  "version": "1.0.0",
+  "authors": [
+    "JFM <john@jfmacdonald.com>"
+  ],
+  "description": "WordPress plugin",
+  "license": "GPLv2",
+  "dependencies": {
+    "validatejs": "^1.5.1",
+    "bourbon": "^4.2.7",
+    "susy": "^2.2.12"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "vendor",
+    "test",
+    "tests"
+  ],
+  "private": true
+}

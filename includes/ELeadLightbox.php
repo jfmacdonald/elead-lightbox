@@ -23,9 +23,10 @@ class ELeadLightbox {
 	 * @var     string $plugin_name This plugin name
 	 * @var     string $version Current plugin version
 	 * @var     string $style_handle Stylesheet handle for enqueue
-	 * @var     string $scripts_handle JavaScript handle for enqueue
+	 * @var     string $script_handle JavaScript handle for enqueue
 	 */
-	protected $plugin_name, $version, $style_handle, $scripts_handle;
+	protected $plugin_name, $version, $style_handle, $script_handle;
+
 
 	/**
 	 * @since   0.1.0
@@ -43,19 +44,19 @@ class ELeadLightbox {
 	 */
 	public function __construct() {
 
-		$this->plugin_name    = 'elead-lightbox';
-		$this->version        = '0.1.0';
-		$this->style_handle   = $this->plugin_name . '-styles';
-		$this->scripts_handle = $this->plugin_name . '-scripts';
-		$this->services       = array(
+		$this->plugin_name      = 'elead-lightbox';
+		$this->version          = '1.0.0';
+		$this->style_handle     = $this->plugin_name . '-styles';
+		$this->script_handle    = $this->plugin_name . '-script';
+		$this->services         = array(
 			'Solar',
 			'Windows',
 			'Insulation',
 			'Roofing',
 			'Other'
 		);
-		$this->endpoint       = '';
-		$this->returnURL      = '';
+		$this->endpoint         = '';
+		$this->returnURL        = '';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -114,11 +115,15 @@ class ELeadLightbox {
 	 * @access   private
 	 */
 	function register_public_hooks() {
-		$public = plugin_dir_url( dirname( __FILE__ ) ) . 'public';
+		$public           = plugin_dir_url( dirname( __FILE__ ) ) . 'public';
+		$validator        = $public . '/js/validate.min.js';
+		$validator_handle = 'elead-lightbox-validator';
 		wp_register_style( $this->style_handle, $public . '/css/' . $this->plugin_name . '-public.css' );
 		wp_enqueue_style( $this->style_handle );
-		wp_register_script( $this->scripts_handle, $public . '/js/' . $this->plugin_name . '-public.js', array( 'jquery' ) );
-		wp_enqueue_script( $this->scripts_handle );
+		wp_register_script( $validator_handle, $validator, array(), '', true );
+		wp_register_script( $this->script_handle, $public . '/js/' . $this->plugin_name . '-public.js',
+			array( 'jquery', $validator_handle ), '', true );
+		wp_enqueue_script( $this->script_handle );
 	}
 
 	public function register_shortcodes() {

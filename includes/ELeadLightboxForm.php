@@ -13,9 +13,10 @@ class ELeadLightboxForm {
 	protected static $fieldn = 0;
 	private $action, $url, $cta;
 	private $service = array();
+	private $header = '';
 	private $service_header = '';
 	private $formid = '';
-	private $legend = 'Please provide the following information so we may contact you.';
+	private $legend = 'Please provide';
 
 	function __construct( $endpoint = '#', $returnURL = '#', $call_to_action = 'free quote' ) {
 		if ( $endpoint ) {
@@ -41,6 +42,10 @@ class ELeadLightboxForm {
 		}
 	}
 
+	function set_header( $text ) {
+		$this->header = trim($text);
+	}
+
 	function set_service( $description ) {
 		$trimmed = trim( $description );
 		if ( $trimmed ) {
@@ -61,12 +66,13 @@ class ELeadLightboxForm {
 	private function get_text_input( $placeholder, $required = false, $minlength = 2, $maxlength = 100 ) {
 		self::$fieldn ++;
 		$id          = sprintf( '%s-input-%d', $this->formid, self::$fieldn );
-		$placeholder = trim( strip_tags( $placeholder ) );
+		$placeholder = ucfirst(strtolower(trim( strip_tags( $placeholder ) )));
 		$name        = strtolower( preg_replace( '/\W+/', '', $placeholder ) );
 		$required    = $required ? 'required' : '';
 		$html        = sprintf( '  <label for="%s" class="%s">' . PHP_EOL, $id, self::PREFIX . '__input' );
 		$html .= sprintf( '    <input type="text" id="%s" name="%s" minlength="%d" maxlength="%d" %s placeholder="%s">',
 			$id, $name, $minlength, $maxlength, $required, $placeholder );
+		$html .= sprintf( '    <div class="%s__error"></div>' . PHP_EOL, self::PREFIX );
 		$html .= '  </label>' . PHP_EOL;
 
 		return $html;
@@ -98,12 +104,14 @@ class ELeadLightboxForm {
 		if ( ! $this->action ) {
 			return '';
 		}
-		$url = filter_var( $this->url, FILTER_VALIDATE_URL );
+		// $url = filter_var( $this->url, FILTER_VALIDATE_URL );
+		$url = $this->url;
 		if ( ! $url ) {
 			$url = '#';
 		}
-		$form = sprintf( '<form id="%s" class="%s" action="%s" method="POST" autocomplete="off">' . PHP_EOL,
-			$this->formid, self::PREFIX, $this->action );
+		$form = sprintf( '<form id="%s" name="%s" class="%s" action="%s" method="POST" autocomplete="off">' . PHP_EOL,
+			$this->formid, $this->formid, self::PREFIX, $this->action );
+		$form .= sprintf( '   <legend class="%s__legend"></legend>' . PHP_EOL, self::PREFIX);
 		$form .= sprintf( '   <fieldset class=%s__fieldset>' . PHP_EOL, self::PREFIX );
 		$form .= sprintf( '   <legend>%s</legend>' . PHP_EOL, $this->legend );
 
@@ -116,7 +124,7 @@ class ELeadLightboxForm {
 		$form .= $this->get_text_input( 'First Name' );
 		$form .= $this->get_text_input( 'Last Name' );
 		$form .= $this->get_text_input( 'Email', $required = false );
-		$form .= $this->get_text_input( 'Phone' );
+		$form .= $this->get_text_input( 'Phone Number' );
 		if ( $hide_zipcode ) {
 			$form .= sprintf( '  <input type="hidden" name="zipcode" value="">' . PHP_EOL );
 		} else {

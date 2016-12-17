@@ -195,13 +195,12 @@
     function fill_modal(zipcode, city, $modal) {
         var $form = $modal.find('.elead-lightbox-form');
         var $header = $modal.find('.elead-lightbox-modal__header');
-
-        if ($header.length) {
-            $header.html('<p><strong>'+city+'</strong> is going for solar energy!</p>');
-        }
         if ($form.length) {
+            if ($header.length) {
+                $header.html('<p><strong>' + city + '</strong> is going solar!</p>');
+            }
             var $fillme = $form.find('input[name="' + ctaEntry + '"]');
-            if ( $fillme.length ) {
+            if ($fillme.length) {
                 $fillme.val(zipcode);
             }
 
@@ -212,15 +211,45 @@
     function invalid_zipcode($error) {
         $error.html('<p>Please enter a valid zip code.</p>');
     }
+
     function unsupported_browser($error) {
-        timed_out($error);
+        cannot_get_zip($error);
         // $error.html('<p>Browser does not support pop-up form. Please call for quote.</p>');
     }
-    function timed_out($error) {
-       $error.html('<p>Could not locate that zip code!</p>');
+
+    function cannot_get_zip($error) {
+        $error.html('<p>Could not locate that zip code!</p>');
     }
 
-    function handle_cta($cta, $modal) {
+    function get_city_from_json(zipcode, results) {
+        var city = '';
+        var i, j, component;
+        if (results && Array.isArray(results)) {
+            for (i = 0; i < results.length; i++) {
+                if (!results[i]['address_components']) continue;
+                if (!Array.isArray(results[i]['address_components'])) continue;
+                var address_components = results[i]['address_components'];
+                var postal_code = '';
+                var locality = '';
+                for (j = 0; j < address_components.length; j++) {
+                    component = address_components[j];
+                    if (component.types.indexOf('postal_code') > -1) {
+                        postal_code = component['long_name'];
+                    }
+                    if (component.types.indexOf('locality') > -1) {
+                        locality = component['long_name'];
+                    }
+                }
+                if (locality && postal_code === zipcode) {
+                    city = locality;
+                    break;
+                }
+            }
+        }
+        return city;
+    }
+
+    function process_cta($cta, $modal) {
         var $input = $cta.find('.elead-lightbox-cta__input');
         var $error = $cta.find('.elead-lightbox-cta__error');
         $error.html('');
@@ -242,75 +271,69 @@
             fill_modal(zipcode, city, $modal);
             return;
         }
-        if ( !window.XMLHttpRequest) {
+        if (!window.XMLHttpRequest) {
             unsupported_browser($error);
             return;
         }
         var url = geocode + zipcode + '&sensor=true';
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
-            if (xhr.status === 200) {
-                var json = JSON.parse(xhr.responseText);
-                if (json.results && json.results[0].address_components) {
-                    var components = json.results[0].address_components;
-                    for (var i = 0; i < components.length; i++) {
-                        if (components[i].types && components[i].types.indexOf('neighborhood') > -1) {
-                            city = components[i].short_name;
-                            break;
-                        }
-                    }
-                    if (!city) {
-                        for (var i = 0; i < components.length; i++) {
-                            if (components[i].types && components[i].types.indexOf('locality') > -1) {
-                                city = components[i].short_name;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if ( city ) {
-                    fill_modal(zipcode, city, $modal);
-                }
+            if (xhr.status !== 200) {
+                cannot_get_zip($error);
             } else {
-                invalid_zipcode($error);
+                var json = JSON.parse(xhr.responseText);
+                if (json.results) {
+                    city = get_city_from_json(zipcode, json.results);
+                    if (city) {
+                        fill_modal(zipcode, city, $modal);
+                    } else {
+                        invalid_zipcode($error);
+                    }
+                } else {
+                    cannot_get_zip($error);
+                }
             }
         };
         xhr.onerror = function () {
             invalid_zipcode($error);
         };
         xhr.ontimeout = function () {
-            timed_out($error);
+            cannot_get_zip($error);
         };
         xhr.open('GET', url);
         xhr.timeout = 2000;
         xhr.send(null);
     }
 
-    $(function () {
+    function handle_cta($) {
         var $cta = $('.elead-lightbox-cta__button');
         if ($cta.length) {
             $cta.on('click', function (e) {
                 var $form = $(this).closest('form');
                 var $modal = $form.next('.elead-lightbox-modal');
-                if ($form.length && $modal.length ) {
-                    handle_cta($form,$modal);
+                if ($form.length && $modal.length) {
+                    process_cta($form, $modal);
                 }
             });
         }
 
         var $zipbox = $('.elead-lightbox-cta__input');
         if ($zipbox.length) {
-            $zipbox.on('keypress', function(e) {
-               if ( e.keyCode === 13 ) {
-                   e.preventDefault();
-                   var $form = $(this).closest('form');
-                   var $modal = $form.next('.elead-lightbox-modal');
-                   if ($form.length && $modal.length ) {
-                       handle_cta($form,$modal);
-                   }
-               }
+            $zipbox.on('keypress', function (e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    var $form = $(this).closest('form');
+                    var $modal = $form.next('.elead-lightbox-modal');
+                    if ($form.length && $modal.length) {
+                        process_cta($form, $modal);
+                    }
+                }
+            });
+            $zipbox.on('focus', function(e) {
+               $('.elead-lightbox-cta__error').text('');
             });
         }
+
 
         var $modal = $('.elead-lightbox-modal');
         if ($modal.length) {
@@ -318,7 +341,40 @@
                 $(this).closest('.elead-lightbox-modal').css('display', 'none');
             });
         }
+    }
 
+    function handle_form($) {
+        var validators = [];
+        $('.elead-lightbox-form').each(function (i) {
+            var $form = $(this);
+            validators[i] = new FormValidator(this.id, [
+                {name: 'firstname', display: 'First Name', rules: 'required'},
+                {name: 'lastname', display: 'Last Name', rules: 'required'},
+                {name: 'email', display: 'Email', rules: 'valid_email'},
+                {name: 'phonenumber', display: 'Phone Number', rules: 'required'},
+                {name: 'zipcode', display: 'Zip Code', rules: 'required|valid_zipcode'}
+            ], function (errors, event) {
+                for (var n = 0; n < errors.length; n++) {
+                    var name = errors[n].name;
+                    var $errorBox = $form.find('input[name="' + name + '"]').siblings('div');
+                    $errorBox.text(errors[n].message);
+                }
+            });
+            validators[i].registerCallback('valid_zipcode', function (value) {
+                return /^\d{5}$/.test(value.trim());
+            });
+            validators[i].setMessage('required', 'Please provide %s.');
+            validators[i].setMessage('valid_email', 'Email entry is invalid.');
+            validators[i].setMessage('valid_zipcode', 'Zip Code entry is invalid.');
+        });
+        $('.elead-lightbox-form__input > input ').on('focus', function (e) {
+           $(this).siblings().text('');
+        });
+    }
+
+    $(function () {
+        handle_cta($);
+        handle_form($);
     });
 
 })(jQuery);

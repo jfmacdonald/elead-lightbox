@@ -41,7 +41,6 @@
     line-height: inherit;
     padding: 0;
     text-align: center !important;
-    text-transform: capitalize;
     width: 50%; }
   .elead-lightbox-cta__button {
     background-color: #f8a13c;
@@ -55,7 +54,9 @@
     line-height: inherit;
     text-align: center !important;
     text-transform: capitalize;
-    width: 50%; }
+    width: 50%;
+    border-bottom-right-radius: 1.6rem;
+    border-top-right-radius: 1.6rem; }
   .elead-lightbox-cta__button:hover, .elead-lightbox-cta__button:focus {
     background-color: rgba(248, 161, 60, 0.58); }
   .elead-lightbox-cta__button:hover:after, .elead-lightbox-cta__button:focus:after {
@@ -63,7 +64,7 @@
   .elead-lightbox-cta__error {
     margin: 1rem auto;
     width: 100%;
-    color: #f8a13c;
+    color: #ffc98b;
     text-align: center;
     font-size: 1.2rem;
     font-weight: bold; }
@@ -82,7 +83,7 @@
   .elead-lightbox-form__fieldset {
     display: block;
     position: relative;
-    width: 90%;
+    width: 100%;
     border-width: 0;
     padding: 0; }
   .elead-lightbox-form__input {
@@ -98,8 +99,7 @@
       width: 100%;
       margin: 0.5em 0;
       border-radius: 0.2em;
-      font-size: inherit;
-      text-transform: capitalize; }
+      font-size: inherit; }
   .elead-lightbox-form__checkbox {
     display: block;
     float: left;
@@ -107,6 +107,11 @@
     color: inherit; }
     .elead-lightbox-form__checkbox input {
       font-size: inherit; }
+  .elead-lightbox-form__error {
+    margin: 0 0 0.5em 0;
+    color: #ffc98b;
+    font-size: 1em;
+    font-weight: bold; }
   .elead-lightbox-form__submit {
     margin: 2em auto;
     display: block;
@@ -159,6 +164,7 @@
     padding: 0;
     width: 100%;
     height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
     vertical-align: middle; }
   .elead-lightbox-modal__lightbox {
     display: block;
@@ -167,7 +173,6 @@
     max-width: 300px;
     margin-left: auto;
     margin-right: auto;
-    padding: 1em;
     background-color: white;
     min-height: 400px;
     overflow: auto;
@@ -178,31 +183,36 @@
       clear: both; }
   .elead-lightbox-modal__close {
     display: block;
-    position: relative;
-    top: 0;
-    right: 0;
-    font-size: 3rem;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 48px;
     font-weight: lighter;
     text-decoration: none;
     color: #0b0b0b;
     overflow: visible;
-    text-align: right;
+    text-align: left;
     z-index: 5001;
     cursor: pointer; }
   .elead-lightbox-modal__header {
+    position: relative;
     display: block;
     color: black;
-    font-size: 1.4em;
-    width: 90%;
-    margin: 1rem auto; }
+    font-size: 1.2em;
+    margin: 12px 60px 12px 12px;
+    padding: 0 1rem;
+    float: left;
+    text-align: left; }
   .elead-lightbox-modal__body {
-    margin-top: 1rem;
+    position: relative;
     display: block;
-    width: 100%; }
+    width: 276px;
+    margin: 12px; }
   .elead-lightbox-modal__footer {
-    margin-top: 1rem;
     display: block;
-    width: 100%; }
+    padding: 0 1rem;
+    position: relative;
+    margin: 12px; }
   .elead-lightbox-modal .elead-lightbox-form {
     color: #4c4c4d;
     background-color: transparent;
@@ -217,7 +227,6 @@
     width: 18rem; }
   .elead-lightbox-cta__button {
     width: 12rem; }
-
   .elead-lightbox-modal__lightbox {
     max-width: 500px;
     margin-left: auto;
@@ -226,13 +235,17 @@
       content: " ";
       display: block;
       clear: both; }
+  .elead-lightbox-modal__body {
+    margin-top: 2rem;
+    width: 476px; }
   .elead-lightbox-modal .elead-lightbox-form__input {
     width: 50%; }
     .elead-lightbox-modal .elead-lightbox-form__input input[type="text"] {
       width: 95%; }
-  .elead-lightbox-modal .elead-lightbox-form__input:nth-of-type(2n) input {
+  .elead-lightbox-modal .elead-lightbox-form__input:nth-of-type(2n) input[type="text"] {
     float: right; }
-  .elead-lightbox-modal .elead-lightbox-form__submit input {
+  .elead-lightbox-modal .elead-lightbox-form__submit {
+    margin: 4em auto;
     width: 50%; } }
 
 /*# sourceMappingURL=elead-lightbox-public.css.map */

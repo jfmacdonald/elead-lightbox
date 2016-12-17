@@ -18,6 +18,7 @@ $lightbox-width-medium: 500px;
 $lightbox-min-height: 400px;
 $field-font-size: 1rem;
 $linkcolor: #f8a13c;
+$errorcolor: #ffc98b;
 $hover-opacity: 0.58;
 $cta-font-size: 0.8rem;
 $cta-border: 0.0625rem;
@@ -67,7 +68,6 @@ $cta-height: 4*$cta-font-size;
     line-height: inherit;
     padding: 0 ;
     text-align: center !important;
-    text-transform: capitalize;
     width: 50%;
   }
   &__button {
@@ -83,6 +83,7 @@ $cta-height: 4*$cta-font-size;
     text-align: center !important;
     text-transform: capitalize;
     width: 50%;
+    @include border-right-radius(2*$cta-font-size);
   }
   &__button:hover,
   &__button:focus {
@@ -95,7 +96,7 @@ $cta-height: 4*$cta-font-size;
   &__error {
     margin: 1rem auto;
     width: 100%;
-    color: $linkcolor;
+    color: $errorcolor;
     text-align: center;
     font-size: 1.2rem;
     font-weight: bold;
@@ -120,7 +121,7 @@ $cta-height: 4*$cta-font-size;
   &__fieldset {
     display: block;
     position: relative;
-    width: 90%;
+    width: 100%;
     border-width: 0;
     padding: 0;
     // margin: auto;
@@ -140,7 +141,6 @@ $cta-height: 4*$cta-font-size;
       margin: 0.5em 0;
       border-radius: 0.2em;
       font-size: inherit;
-      text-transform: capitalize;
     }
   }
   &__checkbox {
@@ -151,6 +151,12 @@ $cta-height: 4*$cta-font-size;
     input {
       font-size: inherit;
     }
+  }
+  &__error {
+    margin: 0 0 0.5em 0;
+    color: $errorcolor;
+    font-size: 1em;
+    font-weight: bold;
   }
   &__submit {
     margin: 2em auto;
@@ -212,6 +218,7 @@ $cta-height: 4*$cta-font-size;
     padding: 0;
     width: 100%;
     height: 100%;
+    background-color: rgba(#000000, 0.3);
     vertical-align: middle;
   }
   &__lightbox {
@@ -219,43 +226,46 @@ $cta-height: 4*$cta-font-size;
     position: relative;
     margin: auto;
     @include container($lightbox-width-small);
-    padding: 1em;
     background-color: white;
     min-height: $lightbox-min-height;
-    // width: 90%;
     overflow: auto;
     z-index: 5000;
   }
   &__close {
     display: block;
-    position: relative;
-    top: 0;
-    right: 0;
-    font-size: 3rem;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 48px;
     font-weight: lighter;
     text-decoration: none;
     color: #0b0b0b;
     overflow: visible;
-    text-align: right;
+    text-align: left;
     z-index: 5001;
     cursor: pointer;
   }
   &__header {
+    position: relative;
     display: block;
     color: black;
-    font-size: 1.4em;
-    width: 90%;
-    margin: 1rem auto;
+    font-size: 1.2em;
+    margin: 12px 60px 12px 12px;
+    padding: 0 1rem;
+    float: left;
+    text-align: left;
   }
   &__body {
-    margin-top: 1rem;
+    position: relative;
     display: block;
-    width: 100%;
+    width: $lightbox-width-small - 24px;
+    margin: 12px;
   }
   &__footer {
-    margin-top: 1rem;
     display: block;
-    width: 100%;
+    padding: 0 1rem;
+    position: relative;
+    margin: 12px;
   }
 
   #{$base}-form {
@@ -288,6 +298,10 @@ $cta-height: 4*$cta-font-size;
     &__lightbox {
       @include container($lightbox-width-medium);
     }
+    &__body {
+      margin-top: 2rem;
+      width: $lightbox-width-medium - 24px;
+    }
     #{$base}-form {
       &__input {
         width: 50%;
@@ -296,13 +310,14 @@ $cta-height: 4*$cta-font-size;
         }
       }
       &__input:nth-of-type(2n) {
-        input {
+        input[type="text"] {
           float: right;
         }
       }
       &__submit {
-        input {
-          width: 50%;
+        margin: 4em auto;
+        width: 50%;
+        input[type="submit"] {
         }
       }
     }

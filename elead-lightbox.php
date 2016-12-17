@@ -27,13 +27,6 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-function jfm_save_error() {
-	file_put_contents( '/Users/johnmac/errors', ob_get_contents() );
-}
-
-add_action( 'activated_plugin', 'jfm_save_error' );
-
-
 if ( ! class_exists( 'ELeadLightbox' ) ) {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/ELeadLightbox.php';
 	ELeadLightbox::bootstrap();
@@ -55,29 +48,16 @@ if ( ! class_exists( 'ELeadLightbox_Activator' ) ) {
 	register_deactivation_hook( __FILE__, 'ELeadLightboxDeactivator::deactivate' );
 }
 
-function elead_lightbox_register_public_hooks() {
-	$stylesheet = plugins_url( 'public/css/elead-lightbox-public.css', __FILE__ );
-	$scripts    = plugins_url( 'public/js/elead-lightbox-public.js', __FILE__ );
-	$style_handle = 'elead-lightbox-styles';
-	$script_handle = 'elead-lightbox-scripts';
-	wp_register_style( $style_handle, $stylesheet );
-	wp_enqueue_style( $style_handle );
-	wp_register_script( $script_handle, $scripts, array( 'jquery' ) );
-	wp_enqueue_script( $script_handle );
-}
-// add_action('wp_enqueue_scripts', 'elead_lightbox_register_public_hooks');
-
 function get_elead_lightbox_form() {
-	$rtn_page = get_page_by_path('thank-you');
-	if ( $rtn_page ) {
-		$rtn_url = get_page_uri($rtn_page);
-	} else {
-		$rtn_url = get_page_uri();
-	}
-	$form     = new ELeadLightboxForm(
-		$endpoint = 'https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8',
-		$returnURL = $rtn_url
-	);
+	$rtn_url = get_permalink( get_page_by_path( 'thank-you' ) );
+	// error_log( sprintf( "rtn_url is %s\n", $rtn_url ), 3, '/var/tmp/php-error.log' );
+	$test     = true;
+	$endpoint = $test ?
+		'https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8' :
+		'https://rcenergysolutions.secure.force.com/services/apexrest/i360/eLead';
+	$form     = new ELeadLightboxForm();
+	$form->set_endpoint( $endpoint );
+	$form->set_returnURL( $rtn_url );
 	$services = array(
 		'Solar',
 		'Windows',
@@ -88,18 +68,21 @@ function get_elead_lightbox_form() {
 	foreach ( $services as $service ) {
 		$form->set_service( $service );
 	}
-	$form->set_service_header( 'I am interested in the following services.' );
+	$form->set_service_header( 'I am interested in' );
+
 	return $form;
 }
 
 function elead_lightbox_form() {
 	$form = get_elead_lightbox_form();
+
 	return $form->get_form();
 }
 
 function elead_lightbox_cta() {
 	$form = get_elead_lightbox_form();
-	$cta = new ELeadLightboxCTA( $form );
+	$cta  = new ELeadLightboxCTA( $form );
+
 	return $cta->get_html();
 }
 
