@@ -66,7 +66,7 @@ class ELeadLightboxForm {
 	private function get_text_input( $placeholder, $required = false, $minlength = 2, $maxlength = 100 ) {
 		self::$fieldn ++;
 		$id          = sprintf( '%s-input-%d', $this->formid, self::$fieldn );
-		$placeholder = ucfirst(strtolower(trim( strip_tags( $placeholder ) )));
+		$placeholder = strtolower(trim( strip_tags( $placeholder ) ));
 		$name        = strtolower( preg_replace( '/\W+/', '', $placeholder ) );
 		$required    = $required ? 'required' : '';
 		$html        = sprintf( '  <label for="%s" class="%s">' . PHP_EOL, $id, self::PREFIX . '__input' );

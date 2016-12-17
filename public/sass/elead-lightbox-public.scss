@@ -18,7 +18,7 @@ $lightbox-width-medium: 500px;
 $lightbox-min-height: 400px;
 $field-font-size: 1rem;
 $linkcolor: #f8a13c;
-$errorcolor: #ffc98b;
+$errorcolor: #e43b0f;
 $hover-opacity: 0.58;
 $cta-font-size: 0.8rem;
 $cta-border: 0.0625rem;
@@ -154,6 +154,8 @@ $cta-height: 4*$cta-font-size;
   }
   &__error {
     margin: 0 0 0.5em 0;
+    padding-left: 0.5em;
+    width: 100;
     color: $errorcolor;
     font-size: 1em;
     font-weight: bold;
@@ -297,6 +299,7 @@ $cta-height: 4*$cta-font-size;
   #{$base}-modal {
     &__lightbox {
       @include container($lightbox-width-medium);
+      padding-top: 2rem;
     }
     &__body {
       margin-top: 2rem;
@@ -311,6 +314,9 @@ $cta-height: 4*$cta-font-size;
       }
       &__input:nth-of-type(2n) {
         input[type="text"] {
+          float: right;
+        }
+        &__error {
           float: right;
         }
       }

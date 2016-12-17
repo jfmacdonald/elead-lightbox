@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 
+var plugin = 'elead-lightbox';
 var publik = './public/';
 
 var vendorScripts = [
@@ -18,11 +19,11 @@ var sassPaths = [
 ];
 
 gulp.task('pstyles', function () {
-    return gulp.src(publik + 'sass/elead-lightbox-public.scss')
+    return gulp.src(publik + 'sass/' + plugin + '-public.scss')
         .pipe($.sourcemaps.init())
         .pipe($.sass({
             includePaths: sassPaths
-            //, outputStyle: 'compressed' // if css compressed **file size**
+            , outputStyle: 'compressed'
         }).on('error', $.sass.logError))
         .pipe($.autoprefixer({
             browsers: ['last 2 versions', 'ie >= 9']
@@ -34,11 +35,11 @@ gulp.task('pstyles', function () {
 gulp.task('pscripts', function () {
     return gulp.src(vendorScripts.concat(appScripts))
         .pipe($.babel({
-            presets: ['es2015'],
-            compact: true
+            presets: ['es2015']
+            // , compact: true
         }))
         .pipe($.sourcemaps.init())
-        .pipe($.concat('eleads-lightbox-public.js'))
+        .pipe($.concat(plugin + '-public.js'))
         .pipe(gulp.dest(publik + 'js'))
         .pipe($.rename({suffix: '.min'}))
         .pipe($.uglify())

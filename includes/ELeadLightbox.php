@@ -116,13 +116,10 @@ class ELeadLightbox {
 	 */
 	function register_public_hooks() {
 		$public           = plugin_dir_url( dirname( __FILE__ ) ) . 'public';
-		$validator        = $public . '/js/validate.min.js';
-		$validator_handle = 'elead-lightbox-validator';
 		wp_register_style( $this->style_handle, $public . '/css/' . $this->plugin_name . '-public.css' );
 		wp_enqueue_style( $this->style_handle );
-		wp_register_script( $validator_handle, $validator, array(), '', true );
-		wp_register_script( $this->script_handle, $public . '/js/' . $this->plugin_name . '-public.js',
-			array( 'jquery', $validator_handle ), '', true );
+		wp_register_script( $this->script_handle, $public . '/js/' . $this->plugin_name . '-public.min.js',
+			array( 'jquery' ), '', true );
 		wp_enqueue_script( $this->script_handle );
 	}
 

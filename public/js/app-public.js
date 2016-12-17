@@ -348,11 +348,11 @@
         $('.elead-lightbox-form').each(function (i) {
             var $form = $(this);
             validators[i] = new FormValidator(this.id, [
-                {name: 'firstname', display: 'First Name', rules: 'required'},
-                {name: 'lastname', display: 'Last Name', rules: 'required'},
-                {name: 'email', display: 'Email', rules: 'valid_email'},
-                {name: 'phonenumber', display: 'Phone Number', rules: 'required'},
-                {name: 'zipcode', display: 'Zip Code', rules: 'required|valid_zipcode'}
+                {name: 'firstname', display: 'first name', rules: 'required'},
+                {name: 'lastname', display: 'last name', rules: 'required'},
+                {name: 'email', display: 'email', rules: 'valid_email'},
+                {name: 'phonenumber', display: 'phone number', rules: 'required|callback_valid_phone'},
+                {name: 'zipcode', display: 'Zip Code', rules: 'required|callback_valid_zipcode'}
             ], function (errors, event) {
                 for (var n = 0; n < errors.length; n++) {
                     var name = errors[n].name;
@@ -363,9 +363,13 @@
             validators[i].registerCallback('valid_zipcode', function (value) {
                 return /^\d{5}$/.test(value.trim());
             });
+            validators[i].registerCallback('valid_phone', function (value) {
+                return /^[(]?\d{3}[ ]*[-)]?[ ]*\d{3}[ ]*[\-]?[ ]*\d{4}/.test(value.trim());
+            });
             validators[i].setMessage('required', 'Please provide %s.');
-            validators[i].setMessage('valid_email', 'Email entry is invalid.');
-            validators[i].setMessage('valid_zipcode', 'Zip Code entry is invalid.');
+            validators[i].setMessage('valid_email', 'Email is invalid.');
+            validators[i].setMessage('valid_zipcode', 'Zip code is invalid.');
+            validators[i].setMessage('valid_phone', 'Phone number is invalid.');
         });
         $('.elead-lightbox-form__input > input ').on('focus', function (e) {
            $(this).siblings().text('');
