@@ -38,11 +38,11 @@ $cta-height: 4*$cta-font-size;
     line-height: 1;
     padding: 0;
     position: relative;
-    background-color: white;
+    // background-color: white;
     width: 96%;
     margin-left: 2%;
     height: $cta-height;
-    transition-property:  width, margin-left;
+    transition-property:  width, margin-left, background-color;
     transition-duration: 500ms;
     transition-timing-function:  ease-in-out;
 
@@ -52,13 +52,14 @@ $cta-height: 4*$cta-font-size;
   &__fieldset:hover,
   &__fieldset:focus {
     border: $cta-border solid rgba($linkcolor, $hover-opacity);
-    width: 100%;
+    // background-color: rgba(white, 0.5*$hover-opacity);
     margin-left: 0;
+    width: 100%;
     transition-duration: 250ms;
   }
 
   &__input[type="text"] {
-    background-color: transparent;
+    background-color: white;
     border-width: 0 !important;
     display: block;
     float: left;
@@ -75,7 +76,7 @@ $cta-height: 4*$cta-font-size;
     border-width: 0 !important;
     color: white;
     display: block;
-    float: right;
+    float: left;
     font-size: inherit;
     font-weight: inherit;
     height: $cta-height - 2*$cta-border;
@@ -83,15 +84,20 @@ $cta-height: 4*$cta-font-size;
     text-align: center !important;
     text-transform: capitalize;
     width: 50%;
+    padding: 0;
+    transition-property: content, background-color;
+    transition-duration: 500ms;
     @include border-right-radius(2*$cta-font-size);
   }
   &__button:hover,
   &__button:focus {
     background-color: rgba( $linkcolor, $hover-opacity);
+    transition-duration: 250ms;
   }
   &__button:hover:after,
   &__button:focus:after {
     content: " \232A";
+    transition-duration: 250ms;
   }
   &__error {
     margin: 1rem auto;
@@ -288,11 +294,11 @@ $cta-height: 4*$cta-font-size;
     &__fieldset {
       font-size: 1.5 * $cta-font-size;
     }
-    &__input {
-      width: 0.6*$cta-width;
+    &__input[type="text"] {
+      width: 60%;
     }
     &__button {
-      width: 0.4*$cta-width;
+      width: 40%;
     }
   }
 
