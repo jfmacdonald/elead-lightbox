@@ -197,7 +197,7 @@
         var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
             if ($header.length) {
-                $header.html('<p><strong>' + city + '</strong> is going solar!</p>');
+                $header.html('<p>Get a free quote for solar in <strong>' + city + '</strong>.</p>');
             }
             var $fillme = $form.find('input[name="' + ctaEntry + '"]');
             if ($fillme.length) {

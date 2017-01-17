@@ -62,8 +62,7 @@ function get_elead_lightbox_form() {
 		'Solar',
 		'Windows',
 		'Insulation',
-		'Roofing',
-		'Other'
+		'Roofing'
 	);
 	foreach ( $services as $service ) {
 		$form->set_service( $service );
