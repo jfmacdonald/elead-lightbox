@@ -18,7 +18,10 @@ class ELeadLightboxForm {
 	private $formid = '';
 	private $legend = 'Please provide';
 
-	function __construct( $endpoint = '#', $returnURL = '#', $call_to_action = 'free quote' ) {
+	function __construct(
+		$endpoint = '#',
+		$returnURL = '#',
+		$call_to_action = 'free quote' ) {
 		if ( $endpoint ) {
 			$this->action = $endpoint;
 		}
@@ -100,7 +103,7 @@ class ELeadLightboxForm {
 	}
 
 
-	function get_form( $hide_zipcode = false ) {
+	function get_form( $hide_zipcode = false, $show_address = false ) {
 		if ( ! $this->action ) {
 			return '';
 		}
@@ -125,6 +128,9 @@ class ELeadLightboxForm {
 		$form .= $this->get_text_input( 'Last Name' );
 		$form .= $this->get_text_input( 'Email', $required = false );
 		$form .= $this->get_text_input( 'Phone Number' );
+		if ( $show_address ) {
+			$form .= $this->get_text_input( 'Street Address');
+		}
 		if ( $hide_zipcode ) {
 			$form .= sprintf( '  <input type="hidden" name="zipcode" value="">' . PHP_EOL );
 		} else {

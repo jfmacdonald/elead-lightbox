@@ -191,6 +191,12 @@
         92199: 'Rancho Bernardo'
     };
 
+    function kWhrs(dailyKiloWattHrs) {
+        const hrsSun    = 5;
+        const kWsolar   = 1150;
+        return Math.round(kWsolar * (dailyKiloWattHrs/hrsSun) / 100 ) / 10;
+    }
+
 
     function fill_modal(zipcode, city, $modal) {
         var $form = $modal.find('.elead-lightbox-form');

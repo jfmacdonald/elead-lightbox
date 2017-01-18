@@ -804,6 +804,12 @@ if (typeof module !== 'undefined' && module.exports) {
         92199: 'Rancho Bernardo'
     };
 
+    function kWhrs(dailyKiloWattHrs) {
+        var hrsSun = 5;
+        var kWsolar = 1150;
+        return Math.round(kWsolar * (dailyKiloWattHrs / hrsSun) / 100) / 10;
+    }
+
     function fill_modal(zipcode, city, $modal) {
         var $form = $modal.find('.elead-lightbox-form');
         var $header = $modal.find('.elead-lightbox-modal__header');
