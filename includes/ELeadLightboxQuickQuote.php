@@ -5,7 +5,7 @@
  */
 class ELeadLightboxQuickQuote {
 
-	const PREFIX = 'elead-lightbox-quickquote';
+	const PREFIX = 'elead-lightbox-qquote';
 	private $id = '';
 	private $input = '';
 	private $cta = '';
@@ -15,16 +15,16 @@ class ELeadLightboxQuickQuote {
 
 	function __construct(
 		$form,
-		$call_to_action = 'instant quote',
-		$input = 'average kW hrs',
-		$help = 'Enter average daily kiloWatt hours as shown on your electric bill'
+		$call_to_action = 'get quote',
+		$input = 'Daily kWh',
+		$help = 'Enter daily average kWh (kiloWatt hours) as shown on your electric bill to get a free, instant quote.'
 	) {
 		self::$ctan ++;
 		$this->cta = trim( strip_tags( $call_to_action ) );
 		$this->id  = self::PREFIX . '-' . self::$ctan;
 		$this->tip = $help;
 		$this->set_input( $input );
-		if ( $form instanceof ELeadLightboxForm ) {
+		if ( $form instanceof ELeadLightboxQQForm ) {
 			$this->modal = new ELeadLightboxModal( $form->get_form( $show_address = true ) );
 		}
 	}
@@ -45,8 +45,8 @@ class ELeadLightboxQuickQuote {
 		$html = sprintf( '  <form id="%s" class="%s" action="">' . PHP_EOL, $this->id, self::PREFIX );
 		$html .= sprintf( '    <fieldset class="%s__fieldset">' . PHP_EOL, self::PREFIX );
 		$html .= sprintf( '      <div class="%s__tooltip"> %s </div>' . PHP_EOL, self::PREFIX, $this->tip );
-		$html .= sprintf( '      <input class="%s__input" type="text" placeholder="%s" title="%s" minlength="%d" %s>' . PHP_EOL,
-			self::PREFIX, ucwords( strtolower( $this->input ) ), $this->input, 5, 'required' );
+		$html .= sprintf( '      <input class="%s__input" type="text" placeholder="%s" title="%s" %s>' . PHP_EOL,
+			self::PREFIX, $this->input, $this->input, 'required' );
 		$html .= sprintf( '      <button class="%s__button" type="button" name="%s"> %s </button>' . PHP_EOL,
 			self::PREFIX, self::PREFIX, ucwords( strtolower( $this->cta ) ) );
 		$html .= '    </fieldset>' . PHP_EOL;

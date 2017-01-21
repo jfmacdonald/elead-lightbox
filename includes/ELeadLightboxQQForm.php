@@ -6,26 +6,30 @@
  * Date: 11/28/16
  * Time: 12:21 PM
  */
-class ELeadLightboxForm {
+class ELeadLightboxQQForm {
 
-	const PREFIX = 'elead-lightbox-form';
+	const PREFIX = 'elead-lightbox-qqform';
 	protected static $formn = 0;
 	protected static $fieldn = 0;
 	private $action, $url, $cta;
-	private $service = array();
 	private $header = '';
-	private $service_header = '';
 	private $formid = '';
 	private $legend = 'Please provide';
+	private $show = array(
+		'usage'   => false,
+		'address' => true,
+		'zipcode' => true
+	);
 
 	function __construct(
 		$endpoint = '#',
 		$returnURL = '#',
-		$call_to_action = 'free quote'
+		$call_to_action = 'get quote'
 	) {
 		if ( $endpoint ) {
 			$this->action = $endpoint;
 		}
+
 		if ( $returnURL ) {
 			$this->url = $returnURL;
 		}
@@ -50,24 +54,26 @@ class ELeadLightboxForm {
 		$this->header = trim( $text );
 	}
 
-	function set_service( $description ) {
-		$trimmed = trim( $description );
-		if ( $trimmed ) {
-			$id                   = self::PREFIX . '-' . strtolower( preg_replace( '/\W+/', '-', $trimmed ) );
-			$this->service[ $id ] = $trimmed;
+	function hide( $field ) {
+		if ( array_key_exists( $field, $this->show ) ) {
+			$this->show[ $field ] = false;
 		}
 	}
 
-	function set_service_header( $string ) {
-		$trimmed              = trim( strip_tags( $string ) );
-		$this->service_header = $trimmed;
+	function show( $field ) {
+		if ( array_key_exists( $field, $this->show ) ) {
+			$this->show[ $field ] = true;
+		}
 	}
 
 	function get_id() {
 		return $this->formid;
 	}
 
-	private function get_text_input( $placeholder, $required = false, $minlength = 2, $maxlength = 100 ) {
+	private
+	function get_text_input(
+		$placeholder, $required = false, $minlength = 2, $maxlength = 100
+	) {
 		self::$fieldn ++;
 		$id          = sprintf( '%s-input-%d', $this->formid, self::$fieldn );
 		$placeholder = strtolower( trim( strip_tags( $placeholder ) ) );
@@ -82,18 +88,8 @@ class ELeadLightboxForm {
 		return $html;
 	}
 
-	private function get_checkbox_input( $name, $description ) {
-		self::$fieldn ++;
-		$id          = sprintf( '%s-checkbox-%d', $this->formid, self::$fieldn );
-		$description = trim( strip_tags( $description ) );
-		$html        = sprintf( '  <label for="%s" class="%s">', $id, self::PREFIX . '__checkbox' );
-		$html .= sprintf( '<input type="checkbox" id="%s" name="%s" value="0">', $id, $name );
-		$html .= sprintf( ' %s </label>' . PHP_EOL, $description );
-
-		return $html;
-	}
-
-	private function get_submit_button() {
+	private
+	function get_submit_button() {
 		self::$fieldn ++;
 		$id   = sprintf( '%s-input-%d', $this->formid, self::$fieldn );
 		$html = sprintf( '  <label for="%s" class="%s">' . PHP_EOL, $id, self::PREFIX . '__submit' );
@@ -104,7 +100,7 @@ class ELeadLightboxForm {
 	}
 
 
-	function get_form( $hide_zipcode = false, $show_address = false ) {
+	function get_form() {
 		if ( ! $this->action ) {
 			return '';
 		}
@@ -127,24 +123,18 @@ class ELeadLightboxForm {
 		// form input fields
 		$form .= $this->get_text_input( 'First Name' );
 		$form .= $this->get_text_input( 'Last Name' );
-		$form .= $this->get_text_input( 'Email', $required = false );
+		$form .= $this->get_text_input( 'Email' );
 		$form .= $this->get_text_input( 'Phone Number' );
-		if ( $show_address ) {
+		if ( $this->show['address'] ) {
 			$form .= $this->get_text_input( 'Street Address' );
 		}
-		if ( $hide_zipcode ) {
-			$form .= sprintf( '  <input type="hidden" name="zipcode" value="">' . PHP_EOL );
-		} else {
-			$form .= $this->get_text_input( 'Zipcode' );
+		if ( $this->show['zipcode'] ) {
+			$form .= $this->get_text_input( 'Zip Code' );
 		}
-		$form .= '  </fieldset>' . PHP_EOL;
-
-		// services
-		$form .= sprintf( '   <fieldset class=%s__fieldset>' . PHP_EOL, self::PREFIX );
-		$form .= sprintf( '   <p>%s</p>' . PHP_EOL, $this->service_header );
-
-		foreach ( $this->service as $service_name => $service_description ) {
-			$form .= $this->get_checkbox_input( $service_name, $service_description );
+		if ( $this->show['usage'] ) {
+			$form .= $this->get_text_input( 'Daily Average kWh' );
+		} else {
+			$form .= sprintf( '  <input type="hidden" name="dailyaveragekwh" value="">' . PHP_EOL );
 		}
 		$form .= '  </fieldset>' . PHP_EOL;
 

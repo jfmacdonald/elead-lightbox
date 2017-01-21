@@ -51,7 +51,7 @@ if ( ! class_exists( 'ELeadLightbox_Activator' ) ) {
 function get_elead_lightbox_form() {
 	$rtn_url = get_permalink( get_page_by_path( 'thank-you' ) );
 	// error_log( sprintf( "rtn_url is %s\n", $rtn_url ), 3, '/var/tmp/php-error.log' );
-	$test     = false;
+	$test     = true;
 	$endpoint = $test ?
 		'https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8' :
 		'https://rcenergysolutions.secure.force.com/services/apexrest/i360/eLead';
@@ -85,9 +85,32 @@ function elead_lightbox_cta() {
 	return $cta->get_html();
 }
 
+function get_elead_lightbox_qqform() {
+	$rtn_url = get_permalink( get_page_by_path( 'thank-you' ) );
+	// error_log( sprintf( "rtn_url is %s\n", $rtn_url ), 3, '/var/tmp/php-error.log' );
+	$test     = false;
+	$endpoint = $test ?
+		'https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8' :
+		'https://rcenergysolutions.secure.force.com/services/apexrest/i360/eLead';
+	$form     = new ELeadLightboxQQForm();
+	$form->set_endpoint( $endpoint );
+	$form->set_returnURL( $rtn_url );
+	$form->show('address');
+
+	return $form;
+}
+
+function elead_lightbox_quickquote() {
+	$form = get_elead_lightbox_qqform();
+	$cta  = new ELeadLightboxQuickQuote( $form );
+
+	return $cta->get_html();
+}
+
 function elead_lightbox_shortcode_init() {
 	add_shortcode( 'elead-lightbox-form', 'elead_lightbox_form' );
 	add_shortcode( 'elead-lightbox-cta', 'elead_lightbox_cta' );
+	add_shortcode( 'elead-lightbox-instant-quote', 'elead_lightbox_quickquote' );
 }
 
 add_action( 'init', 'elead_lightbox_shortcode_init' );

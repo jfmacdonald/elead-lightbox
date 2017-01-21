@@ -19,43 +19,81 @@ $lightbox-min-height: 400px;
 $field-font-size: 1rem;
 $linkcolor: #f8a13c;
 $errorcolor: #e43b0f;
+$tooltip-background: #686752;
+$tooltip-color: #fff;
 $hover-opacity: 0.58;
 $cta-font-size: 0.8rem;
 $cta-border: 0.0625rem;
 $cta-width: 30rem;
 $cta-height: 4*$cta-font-size;
+$modal-z-index: 99999999;
 
-#{$base}-cta {
+
+#{$base}-cta,
+#{$base}-qquote {
   display: table;
   margin: 2rem auto;
 
   &__fieldset {
     display: table-cell;
     border: $cta-border solid $linkcolor;
-    overflow: hidden;
+    // overflow: hidden;
     font-size: $cta-font-size;
     font-weight: normal;
     line-height: 1;
     padding: 0;
     position: relative;
-    // background-color: white;
     width: 96%;
     margin-left: 2%;
     height: $cta-height;
-    transition-property:  width, margin-left, background-color;
+    transition-property: width, margin-left, border;
     transition-duration: 500ms;
-    transition-timing-function:  ease-in-out;
+    transition-timing-function: ease-in-out;
 
-    @include border-right-radius(2*$cta-font-size);
     @include border-left-radius(2*$cta-font-size);
+    @include border-right-radius(2*$cta-font-size);
   }
   &__fieldset:hover,
   &__fieldset:focus {
     border: $cta-border solid rgba($linkcolor, $hover-opacity);
-    // background-color: rgba(white, 0.5*$hover-opacity);
     margin-left: 0;
     width: 100%;
     transition-duration: 250ms;
+  }
+
+  &__fieldset:hover &__tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &__tooltip {
+    visibility: hidden;
+    background-color: $tooltip-background;
+    color: $tooltip-color;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    // position text
+    position: absolute;
+    z-index: $modal-z-index;
+    bottom: 125%;
+    left: 25%;
+    width: 100%;
+    margin-left: -60px;
+    // fade in
+    opacity: 0;
+    transition: opacity 1s;
+  }
+  // tooltip arrow
+  &__tooltip:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 20%;
+    margin-left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: $tooltip-background transparent transparent transparent;
   }
 
   &__input[type="text"] {
@@ -67,9 +105,10 @@ $cta-height: 4*$cta-font-size;
     font-weight: inherit;
     height: $cta-height - 2*$cta-border;
     line-height: inherit;
-    padding: 0 ;
+    padding: 0;
     text-align: center !important;
     width: 50%;
+    @include border-left-radius(2*$cta-font-size);
   }
   &__button {
     background-color: $linkcolor;
@@ -91,7 +130,7 @@ $cta-height: 4*$cta-font-size;
   }
   &__button:hover,
   &__button:focus {
-    background-color: rgba( $linkcolor, $hover-opacity);
+    background-color: rgba($linkcolor, $hover-opacity);
     transition-duration: 250ms;
   }
   &__button:hover:after,
@@ -110,14 +149,16 @@ $cta-height: 4*$cta-font-size;
 
 }
 
-#{$base}-form {
+
+#{$base}-form,
+#{$base}-qqform {
   position: relative;
   width: 100%;
   margin: auto;
   min-height: 20em;
   font-size: 1em;
   color: white;
-  background-color: rgba( #333333, 0.5);
+  background-color: rgba(#333333, 0.5);
   padding: 1rem !important;
 
   legend {
@@ -195,7 +236,7 @@ $cta-height: 4*$cta-font-size;
     input[type="submit"]:hover,
     input[type="submit"]:focus {
       font-weight: bolder;
-      background-color: rgba( $linkcolor, $hover-opacity );
+      background-color: rgba($linkcolor, $hover-opacity);
     }
     input[type="submit"]:hover:after,
     input[type="submit"]:focus:after {
@@ -214,7 +255,7 @@ $cta-height: 4*$cta-font-size;
 #{$base}-modal {
   display: none;
   position: fixed;
-  z-index: 10;
+  z-index: $modal-z-index - 1;
   left: 0;
   top: 0;
   width: 100%;
@@ -237,7 +278,7 @@ $cta-height: 4*$cta-font-size;
     background-color: white;
     min-height: $lightbox-min-height;
     overflow: auto;
-    z-index: 5000;
+    z-index: $modal-z-index;
   }
   &__close {
     display: block;
@@ -250,7 +291,7 @@ $cta-height: 4*$cta-font-size;
     color: #0b0b0b;
     overflow: visible;
     text-align: left;
-    z-index: 5001;
+    z-index: $modal-z-index + 1;
     cursor: pointer;
   }
   &__header {
@@ -258,9 +299,10 @@ $cta-height: 4*$cta-font-size;
     display: block;
     color: black;
     font-size: 1.2em;
-    margin: 12px 60px 12px 12px;
+    margin-right: 2em;
+    margin-top: 1em;
+    // margin: 12px 12px 12px 12px;
     padding: 0 1rem;
-    float: left;
     text-align: left;
   }
   &__body {
@@ -290,7 +332,8 @@ $cta-height: 4*$cta-font-size;
 @media screen and (min-width: $medium) {
 
   //$cta-font-size: 1.6rem;
-  #{$base}-cta {
+  #{$base}-cta,
+  #{$base}-qquote {
     &__fieldset {
       font-size: 1.5 * $cta-font-size;
     }
@@ -305,10 +348,10 @@ $cta-height: 4*$cta-font-size;
   #{$base}-modal {
     &__lightbox {
       @include container($lightbox-width-medium);
-      padding-top: 2rem;
+      padding-top: 1rem;
     }
     &__body {
-      margin-top: 2rem;
+      // margin-top: 2rem;
       width: $lightbox-width-medium - 24px;
     }
     #{$base}-form {

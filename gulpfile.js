@@ -6,10 +6,11 @@ var publik = './public/';
 
 var vendorScripts = [
     // Validate.js
-    'vendor/validatejs/validate.js'
+    // 'vendor/validatejs/validate.js'
 ];
 
 var appScripts = [
+    publik + 'js/validate.js',
     publik + 'js/app-public.js'
 ];
 

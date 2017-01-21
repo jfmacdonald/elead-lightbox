@@ -44,19 +44,18 @@ class ELeadLightbox {
 	 */
 	public function __construct() {
 
-		$this->plugin_name      = 'elead-lightbox';
-		$this->version          = '1.0.0';
-		$this->style_handle     = $this->plugin_name . '-styles';
-		$this->script_handle    = $this->plugin_name . '-script';
-		$this->services         = array(
+		$this->plugin_name   = 'elead-lightbox';
+		$this->version       = '1.1.0';
+		$this->style_handle  = $this->plugin_name . '-styles';
+		$this->script_handle = $this->plugin_name . '-script';
+		$this->services      = array(
 			'Solar',
 			'Windows',
 			'Insulation',
-			'Roofing',
-			'Other'
+			'Roofing'
 		);
-		$this->endpoint         = '';
-		$this->returnURL        = '';
+		$this->endpoint      = '';
+		$this->returnURL     = '';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -82,6 +81,8 @@ class ELeadLightbox {
 		require_once( "$includes/ELeadLightboxForm.php" );
 		require_once( "$includes/ELeadLightboxModal.php" );
 		require_once( "$includes/ELeadLightboxCTA.php" );
+		require_once( "$includes/ELeadLightboxQuickQuote.php" );
+		require_once( "$includes/ELeadLightboxQQForm.php" );
 	}
 
 	/**
@@ -115,12 +116,15 @@ class ELeadLightbox {
 	 * @access   private
 	 */
 	function register_public_hooks() {
-		$public           = plugin_dir_url( dirname( __FILE__ ) ) . 'public';
-		wp_register_style( $this->style_handle, $public . '/css/' . $this->plugin_name . '-public.css' );
+		$plugin_dir = plugin_dir_url( dirname( __FILE__ ) );
+		wp_register_style( $this->style_handle, $plugin_dir . '/public/css/' . $this->plugin_name . '-public.css' );
 		wp_enqueue_style( $this->style_handle );
-		wp_register_script( $this->script_handle, $public . '/js/' . $this->plugin_name . '-public.min.js',
+		wp_register_script( $this->script_handle, $plugin_dir . '/public/js/' . $this->plugin_name . '-public.min.js',
 			array( 'jquery' ), '', true );
 		wp_enqueue_script( $this->script_handle );
+		wp_localize_script( $this->script_handle, 'eLeadLightbox', array(
+			'mailer_url' => $plugin_dir . '/mailer.php'
+		) );
 	}
 
 	public function register_shortcodes() {

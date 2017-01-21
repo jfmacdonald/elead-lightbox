@@ -128,7 +128,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }(this);
     },
         attributeValue = function attributeValue(element, attributeName) {
-        var i;
+        var i, elementLength;
 
         if (element.length > 0 && (element[0].type === 'radio' || element[0].type === 'checkbox')) {
             for (i = 0, elementLength = element.length; i < elementLength; i++) {
@@ -804,29 +804,18 @@ if (typeof module !== 'undefined' && module.exports) {
         92199: 'Rancho Bernardo'
     };
 
-    function kWhrs(dailyKiloWattHrs) {
+    function system_size(dailyKiloWattHrs) {
         var hrsSun = 5;
         var kWsolar = 1150;
         return Math.round(kWsolar * (dailyKiloWattHrs / hrsSun) / 100) / 10;
     }
 
-    function fill_modal(zipcode, city, $modal) {
-        var $form = $modal.find('.elead-lightbox-form');
-        var $header = $modal.find('.elead-lightbox-modal__header');
-        if ($form.length) {
-            if ($header.length) {
-                $header.html('<p>Get a free quote for solar in <strong>' + city + '</strong>.</p>');
-            }
-            var $fillme = $form.find('input[name="' + ctaEntry + '"]');
-            if ($fillme.length) {
-                $fillme.val(zipcode);
-            }
-        }
-        $modal.css('display', 'table');
-    }
-
     function invalid_zipcode($error) {
         $error.html('<p>Please enter a valid zip code.</p>');
+    }
+
+    function invalid_number($error) {
+        $error.html('<p>Please enter a postitive number.</p>');
     }
 
     function unsupported_browser($error) {
@@ -866,6 +855,21 @@ if (typeof module !== 'undefined' && module.exports) {
         return city;
     }
 
+    function display_form_modal(zipcode, city, $modal) {
+        var $form = $modal.find('.elead-lightbox-form');
+        var $header = $modal.find('.elead-lightbox-modal__header');
+        if ($form.length) {
+            if ($header.length) {
+                $header.html('<p>Get a free quote for solar in <strong>' + city + '</strong>.</p>');
+            }
+            var $fillme = $form.find('input[name="' + ctaEntry + '"]');
+            if ($fillme.length) {
+                $fillme.val(zipcode);
+            }
+        }
+        $modal.css('display', 'table');
+    }
+
     function process_cta($cta, $modal) {
         var $input = $cta.find('.elead-lightbox-cta__input');
         var $error = $cta.find('.elead-lightbox-cta__error');
@@ -885,7 +889,7 @@ if (typeof module !== 'undefined' && module.exports) {
         var city = '';
         if (zipCity[zipcode]) {
             city = zipCity[zipcode];
-            fill_modal(zipcode, city, $modal);
+            display_form_modal(zipcode, city, $modal);
             return;
         }
         if (!window.XMLHttpRequest) {
@@ -902,7 +906,7 @@ if (typeof module !== 'undefined' && module.exports) {
                 if (json.results) {
                     city = get_city_from_json(zipcode, json.results);
                     if (city) {
-                        fill_modal(zipcode, city, $modal);
+                        display_form_modal(zipcode, city, $modal);
                     } else {
                         invalid_zipcode($error);
                     }
@@ -959,6 +963,77 @@ if (typeof module !== 'undefined' && module.exports) {
         }
     }
 
+    function display_quickquote_modal(value, $modal) {
+        var $form = $modal.find('.elead-lightbox-qqform');
+        var $header = $modal.find('.elead-lightbox-modal__header');
+        if ($form.length) {
+            if ($header.length) {
+                $header.html('<p>Get an instant estimate for a ' + value + ' kWh solar system.</p>');
+            }
+            var $fillme = $form.find('input[name="dailyaveragekwh"]');
+            if ($fillme.length) {
+                $fillme.val(value);
+            }
+        }
+        $modal.css('display', 'table');
+    }
+
+    function process_qquote($cta, $modal) {
+        var $input = $cta.find('.elead-lightbox-qquote__input');
+        var $error = $cta.find('.elead-lightbox-qquote__error');
+        $error.html('');
+
+        var entry = $input.length ? $input.val().trim() : '';
+        if (!entry) {
+            invalid_number($error);
+            return;
+        }
+        var match = /^([0-9]*\.?[0-9]+)/.exec(entry);
+        if (!match) {
+            invalid_number($error);
+            return;
+        }
+        var value = system_size(match[1]);
+        display_quickquote_modal(value, $modal);
+    }
+
+    function handle_qquote($) {
+        var $cta = $('.elead-lightbox-qquote__button');
+        if ($cta.length) {
+            $cta.on('click', function (e) {
+                var $form = $(this).closest('form');
+                var $modal = $form.next('.elead-lightbox-modal');
+                if ($form.length && $modal.length) {
+                    process_qquote($form, $modal);
+                }
+            });
+        }
+
+        var $zipbox = $('.elead-lightbox-qquote__input');
+        if ($zipbox.length) {
+            $zipbox.on('keypress', function (e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    var $form = $(this).closest('form');
+                    var $modal = $form.next('.elead-lightbox-modal');
+                    if ($form.length && $modal.length) {
+                        process_qquote($form, $modal);
+                    }
+                }
+            });
+            $zipbox.on('focus', function (e) {
+                $('.elead-lightbox-qquote__error').text('');
+            });
+        }
+
+        var $modal = $('.elead-lightbox-modal');
+        if ($modal.length) {
+            $modal.find('.elead-lightbox-modal__close').on('click', function (e) {
+                $(this).closest('.elead-lightbox-modal').css('display', 'none');
+            });
+        }
+    }
+
     function handle_form($) {
         var validators = [];
         $('.elead-lightbox-form').each(function (i) {
@@ -979,11 +1054,70 @@ if (typeof module !== 'undefined' && module.exports) {
                 );
             });
             validators[i].setMessage('required', 'Please provide %s.');
-            validators[i].setMessage('valid_email', 'Email is invalid.');
-            validators[i].setMessage('valid_zipcode', 'Zip code is invalid.');
-            validators[i].setMessage('valid_phone', 'Phone number is invalid.');
+            validators[i].setMessage('valid_email', 'Please enter a valid email address.');
+            validators[i].setMessage('valid_zipcode', 'Please enter a valid zip code.');
+            validators[i].setMessage('valid_phone', 'Please enter a valid phone number.');
         });
         $('.elead-lightbox-form__input > input ').on('focus', function (e) {
+            $(this).siblings().text('');
+        });
+    }
+
+    function handle_qqform($) {
+        // eLeadLightbox must be created by wp_localize_script
+        if (typeof eLeadLightbox === 'undefined' || !(eLeadLightbox instanceof Object)) return;
+        var mailer_url = eLeadLightbox.mailer_url;
+        if (!mailer_url) return;
+
+        var validators = [];
+        $('.elead-lightbox-qqform').each(function (i) {
+            var $form = $(this);
+            validators[i] = new FormValidator(this.id, [{ name: 'firstname', display: 'first name', rules: 'required' }, { name: 'lastname', display: 'last name', rules: 'required' }, { name: 'email', display: 'email', rules: 'required|valid_email' }, { name: 'phonenumber', display: 'phone number', rules: 'required|callback_valid_phone' }, { name: 'avekwh', display: 'daily average kWh', rules: 'required|callback_valid_decimal' }, { name: 'zipcode', display: 'Zip Code', rules: 'required|callback_valid_zipcode' }], function (errors, event) {
+                for (var n = 0; n < errors.length; n++) {
+                    var name = errors[n].name;
+                    var $errorBox = $form.find('input[name="' + name + '"]').siblings('div');
+                    $errorBox.text(errors[n].message);
+                }
+            });
+            validators[i].registerCallback('valid_zipcode', function (value) {
+                return (/^\d{5}$/.test(value.trim())
+                );
+            });
+            validators[i].registerCallback('valid_phone', function (value) {
+                return (/^[(]?\d{3}[ ]*[-)]?[ ]*\d{3}[ ]*[\-]?[ ]*\d{4}/.test(value.trim())
+                );
+            });
+            validators[i].setMessage('required', 'Please provide %s.');
+            validators[i].setMessage('valid_email', 'Please enter a valid email address.');
+            validators[i].setMessage('valid_zipcode', 'Please enter a valid zip code.');
+            validators[i].setMessage('valid_phone', 'Please enter a valid phone number.');
+            validators[i].setMessage('valid_decimal', 'Please enter a positive number.');
+            // handle submit
+            $(this).submit(function (e) {
+                var $form = $(this);
+                // hold off on form submission until email is sent
+                e.preventDefault();
+                e.returnValue = false;
+                // send email
+                $.ajax({
+                    url: mailer_url,
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    error: function error() {
+                        console.log('MAILER ERROR');
+                        console.log('mailer_url: ' + mailer_url);
+                        console.log('data: ' + $(this).serialize());
+                    },
+                    success: function success() {},
+                    complete: function complete() {
+                        $(this).off('submit');
+                        $(this).submit();
+                    }
+                });
+            });
+        });
+        $('.elead-lightbox-qqform__input > input ').on('focus', function (e) {
             $(this).siblings().text('');
         });
     }
@@ -991,5 +1125,9 @@ if (typeof module !== 'undefined' && module.exports) {
     $(function () {
         handle_cta($);
         handle_form($);
+        if (typeof eLeadLightbox !== 'undefined') {
+            handle_qquote($);
+            handle_qqform($);
+        }
     });
 })(jQuery);
