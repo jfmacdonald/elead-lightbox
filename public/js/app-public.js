@@ -494,29 +494,22 @@
             validators[i].setMessage('valid_decimal', 'Please enter a positive number.');
             // handle submit
             $(this).submit(function (e) {
-                var $form = $(this);
-                // hold off on form submission until email is sent
-                e.preventDefault();
-                e.returnValue = false;
                 // send email
                 $.ajax({
                     url: mailer_url,
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
-                    error: function () {
-                        console.log('MAILER ERROR');
-                        console.log('mailer_url: ' + mailer_url);
-                        console.log('data: ' + $(this).serialize());
+                    error: function (data) {
                     },
-                    success: function () {
-
+                    success: function (data) {
                     },
-                    complete: function () {
-                        $(this).off('submit');
-                        $(this).submit();
+                    complete: function (data) {
+                        $form.off('submit').submit();
                     }
                 });
+                // hold off on form submission until email is sent
+                e.preventDefault();
             });
         });
         $('.elead-lightbox-qqform__input > input ').on('focus', function (e) {

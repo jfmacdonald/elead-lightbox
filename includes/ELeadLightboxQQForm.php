@@ -147,6 +147,7 @@ class ELeadLightboxQQForm {
 		return $form;
 	}
 
+
 	function get_html() {
 		$html = '';
 

@@ -87,8 +87,7 @@ function elead_lightbox_cta() {
 
 function get_elead_lightbox_qqform() {
 	$rtn_url = get_permalink( get_page_by_path( 'thank-you' ) );
-	// error_log( sprintf( "rtn_url is %s\n", $rtn_url ), 3, '/var/tmp/php-error.log' );
-	$test     = false;
+	$test     = true;
 	$endpoint = $test ?
 		'https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8' :
 		'https://rcenergysolutions.secure.force.com/services/apexrest/i360/eLead';

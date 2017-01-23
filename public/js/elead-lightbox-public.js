@@ -1094,27 +1094,20 @@ if (typeof module !== 'undefined' && module.exports) {
             validators[i].setMessage('valid_decimal', 'Please enter a positive number.');
             // handle submit
             $(this).submit(function (e) {
-                var $form = $(this);
-                // hold off on form submission until email is sent
-                e.preventDefault();
-                e.returnValue = false;
                 // send email
                 $.ajax({
                     url: mailer_url,
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
-                    error: function error() {
-                        console.log('MAILER ERROR');
-                        console.log('mailer_url: ' + mailer_url);
-                        console.log('data: ' + $(this).serialize());
-                    },
-                    success: function success() {},
-                    complete: function complete() {
-                        $(this).off('submit');
-                        $(this).submit();
+                    error: function error(data) {},
+                    success: function success(data) {},
+                    complete: function complete(data) {
+                        $form.off('submit').submit();
                     }
                 });
+                // hold off on form submission until email is sent
+                e.preventDefault();
             });
         });
         $('.elead-lightbox-qqform__input > input ').on('focus', function (e) {
