@@ -247,7 +247,7 @@
         var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
             if ($header.length) {
-                $header.html('<p>Get a free quote for solar in <strong>' + city + '</strong>.</p>');
+                $header.html('<p>Get a free home-energy consultation in <strong>' + city + '</strong>.</p>');
             }
             var $fillme = $form.find('input[name="' + ctaEntry + '"]');
             if ($fillme.length) {
@@ -357,13 +357,16 @@
         var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
             if ($header.length) {
-                $header.html('<p>Get an instant estimate for a '+ value + ' kWh solar system.</p>');
+                $header.html( '<p>Your solar system size is</p>'
+                        + '<p class=".elead-lightbox-qqform__systemsize">'
+                    + value
+                    + 'kWh</p>'
+                    + '<p>Complete the form for an instant quote.</p>');
             }
             var $fillme = $form.find('input[name="dailyaveragekwh"]');
             if ($fillme.length) {
                 $fillme.val(value);
             }
-
         }
         $modal.css('display', 'table');
     }
@@ -467,6 +470,17 @@
         var validators = [];
         $('.elead-lightbox-qqform').each(function (i) {
             var $form = $(this);
+            var $response = $form.parent().find('.elead-lightbox-qqform-response');
+            var $emailSpan = $form.parent().find('.elead-lightbox-qqform-response__email');
+            var $iframe = $form.siblings('.elead-lightbox-qqform-response__target');
+            console.log('FORM');
+            console.dir($form);
+            console.log('RESPONSE');
+            console.dir($response);
+            console.log('SPAN');
+            console.dir($emailSpan);
+            console.log('IFRAME');
+            console.dir($iframe);
             validators[i] = new FormValidator(this.id, [
                 {name: 'firstname', display: 'first name', rules: 'required'},
                 {name: 'lastname', display: 'last name', rules: 'required'},
@@ -495,6 +509,7 @@
             // handle submit
             $(this).submit(function (e) {
                 // send email
+                var address = $form.find('input[name="email"]').val();
                 $.ajax({
                     url: mailer_url,
                     method: 'POST',
@@ -505,11 +520,24 @@
                     success: function (data) {
                     },
                     complete: function (data) {
-                        $form.off('submit').submit();
+                        // $form.off('submit').submit();
                     }
-                });
+                })
+                    .done(function (data) {
+
+                        $iframe.on('load', function (e) {
+                            $form.css({
+                                visibility: 'hidden'
+                            });
+                            $emailSpan.text(address);
+                            $response.css({
+                                visibility: 'visible'
+                            });
+                        });
+
+                    });
                 // hold off on form submission until email is sent
-                e.preventDefault();
+                // e.preventDefault();
             });
         });
         $('.elead-lightbox-qqform__input > input ').on('focus', function (e) {

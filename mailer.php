@@ -66,6 +66,11 @@ class ELeadLightboxMailer {
 		return $this->email && $this->size;
 	}
 
+	function get_name() {
+		$name = $this->input['firstname'] . ' ' . $this->input['lastname'];
+		return $name;
+	}
+
 	function get_email() {
 		return $this->email;
 	}
@@ -75,29 +80,43 @@ class ELeadLightboxMailer {
 	}
 
 	function min_cost() {
-		return 1000 * $this->mincost * $this->size;
+		return '$' . number_format(1000 * $this->mincost * $this->size);
 	}
 
 	function max_cost() {
-		return 1000 * $this->maxcost * $this->size;
+		return '$' . number_format(1000 * $this->maxcost * $this->size);
 	}
 
 	function get_message() {
+		$name    = $this->get_name();
 		$size    = $this->get_size();
 		$min     = $this->min_cost();
 		$max     = $this->max_cost();
-		$phone   = $this->phone;
 		$message = <<< EOM
+		
+		<p>Hello {$name},</p>
+		<p>
+		Thanks for using the RC Energy Solutions solar cost calculator. We estimate that your solar 
+		installation providing {$size}kWh will cost between <strong>{$min}</strong> and <strong>{$max}.</p>
+		<p>
+		There are many factors that can influence where you fall within this range. Here are just a few:</p>
+		<ul>
+		<li>Roof pitch</li>
+		<li>Available roof space</li>
+		<li>Type of roofing material</li>
+		<li>Average daily sunlight at your home</li>
+		<li>Type of solar panel</li>
+		<li>Any need for electrical work</li>
+		<ul>
+		<p>
+		One of our solar experts will be in touch shortly to schedule a free, no-pressure in-home consultation 
+		so we can provide you with more information and an exact quote.</p>
+		<p>
+		Thank you for contacting RC Energy Solutions about your solar power needs. 
+		We look forward to working with you! </p>
 
-	Hello,
-
-	Your $size kWh solar system will cost between \${$min} and \${$max}.
-	We will provide a more precise quote after evaluating your site.
-
-	Please contact us at $phone if you have any questions.
-
-	Thank you for contacting us!
-	
+		<p>Justin Lonson
+		<br>President, RC Energy Solutions</p>
 EOM;
 		return $message;
 	}

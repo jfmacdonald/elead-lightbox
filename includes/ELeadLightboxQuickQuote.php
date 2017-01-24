@@ -15,9 +15,9 @@ class ELeadLightboxQuickQuote {
 
 	function __construct(
 		$form,
-		$call_to_action = 'get quote',
-		$input = 'Daily kWh',
-		$help = 'Enter daily average kWh (kiloWatt hours) as shown on your electric bill to get a free, instant quote.'
+		$call_to_action = 'calculate',
+		$input = 'Avg Daily kWh',
+		$help = 'Enter <strong>daily average kWh</strong> (kiloWatt hours) as shown on your electric bill to calculate solar system size.'
 	) {
 		self::$ctan ++;
 		$this->cta = trim( strip_tags( $call_to_action ) );

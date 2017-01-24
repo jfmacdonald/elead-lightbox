@@ -99,6 +99,21 @@ class ELeadLightboxQQForm {
 		return $html;
 	}
 
+	function get_response() {
+
+		$class = self::PREFIX . '-response';
+		$name  = 'target-' . $this->formid;
+		$html = <<<EOM
+		<iframe class="{$class}__target" name="{$name}"></iframe>
+		<div class="{$class}">
+		<p class="{$class}__heading">Success!</p>
+		<p> We are sending your quote to <span class="{$class}__email"></span>. 
+		If you do not see the email shortly, please check your spam folder.</p>
+		</div>
+EOM;
+		return $html;
+	}
+
 
 	function get_form() {
 		if ( ! $this->action ) {
@@ -109,8 +124,9 @@ class ELeadLightboxQQForm {
 		if ( ! $url ) {
 			$url = '#';
 		}
-		$form = sprintf( '<form id="%s" name="%s" class="%s" action="%s" method="POST" autocomplete="off">' . PHP_EOL,
-			$this->formid, $this->formid, self::PREFIX, $this->action );
+		$form = $this->get_response();
+		$form .= sprintf( '<form id="%s" name="%s" class="%s" action="%s" method="POST" target="%s">' . PHP_EOL,
+			$this->formid, $this->formid, self::PREFIX, $this->action, 'target-'.$this->formid );
 		$form .= sprintf( '   <legend class="%s__legend"></legend>' . PHP_EOL, self::PREFIX );
 		$form .= sprintf( '   <fieldset class=%s__fieldset>' . PHP_EOL, self::PREFIX );
 		$form .= sprintf( '   <legend>%s</legend>' . PHP_EOL, $this->legend );
@@ -118,7 +134,7 @@ class ELeadLightboxQQForm {
 		// hidden input
 		$form .= sprintf( '  <input type="hidden" name="sourcetype" value="%s">' . PHP_EOL, 'Website' );
 		$form .= sprintf( '  <input type="hidden" name="source" value="%s">' . PHP_EOL, 'eLead Form' );
-		$form .= sprintf( '  <input type="hidden" name="retURL" value="%s">' . PHP_EOL, $url );
+		// $form .= sprintf( '  <input type="hidden" name="retURL" value="%s">' . PHP_EOL, $url );
 
 		// form input fields
 		$form .= $this->get_text_input( 'First Name' );
@@ -143,6 +159,7 @@ class ELeadLightboxQQForm {
 
 		//close and return
 		$form .= '</form>' . PHP_EOL;
+
 
 		return $form;
 	}
