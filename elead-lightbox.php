@@ -5,14 +5,14 @@
  * @package   elead-lightbox
  * @author    John Farrell MacDonald <john@jfmacdonald.com>
  * @license   GPL-2.0+
- * @link      http://example.com
- * @copyright 2014 Your Name or Company Name
+ * @link      http://jfmacdonald.com
+ * @copyright 2017 John Farrell MacDonald
  *
  * @wordpress-plugin
  * Plugin Name:       ELead Lightbox
- * Plugin URI:        @TODO
- * Description:       CTA and form for submitting a quote request to a CRM.
- * Version:           1.0.0
+ * Plugin URI:        https://jfmacdonald.com
+ * Description:       CTA and form for submitting a quote request to a Force.com CRM.
+ * Version:           1.1.0
  * Author:            John Farrell MacDonald
  * Author URI:        https://jfmacdonald.com
  * Text Domain:       elead-lightbox-locale
