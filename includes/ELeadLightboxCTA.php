@@ -44,8 +44,8 @@ class ELeadLightboxCTA {
 			self::PREFIX, ucwords( strtolower( $this->input ) ), $this->input, 5, 'required' );
 		$html .= sprintf( '      <button class="%s__button" type="button" name="%s"> %s </button>' . PHP_EOL,
 			self::PREFIX, self::PREFIX, ucwords( strtolower( $this->cta ) ) );
+		$html .= sprintf( '      <div class="%s__error"></div>'. PHP_EOL, self::PREFIX );
 		$html .= '    </fieldset>' . PHP_EOL;
-		$html .= sprintf( '   <div class="%s__error"></div>'. PHP_EOL, self::PREFIX );
 		$html .= '  </form>' . PHP_EOL;
 
 		return $html;

@@ -14,10 +14,10 @@ class ELeadLightboxQQForm {
 	private $action, $url, $cta;
 	private $header = '';
 	private $formid = '';
-	private $legend = 'Please provide';
+	private $legend = 'Complete the form for an instant quote.';
 	private $show = array(
 		'usage'   => false,
-		'address' => true,
+		'address' => false,
 		'zipcode' => true
 	);
 
@@ -102,15 +102,17 @@ class ELeadLightboxQQForm {
 	function get_response() {
 
 		$class = self::PREFIX . '-response';
-		$name  = 'target-' . $this->formid;
+
 		$html = <<<EOM
-		<iframe class="{$class}__target" name="{$name}"></iframe>
 		<div class="{$class}">
 		<p class="{$class}__heading">Success!</p>
 		<p> We are sending your quote to <span class="{$class}__email"></span>. 
 		If you do not see the email shortly, please check your spam folder.</p>
-		</div>
 EOM;
+		$html .= '<p>Are you looking for financing? ';
+		$html .= '<a href="<?php get_permalink( get_page_by_path( \'solar-financing\' ) ); ?>">Apply online.</a>';
+		$html .= '</div>';
+
 		return $html;
 	}
 
@@ -125,8 +127,8 @@ EOM;
 			$url = '#';
 		}
 		$form = $this->get_response();
-		$form .= sprintf( '<form id="%s" name="%s" class="%s" action="%s" method="POST" target="%s">' . PHP_EOL,
-			$this->formid, $this->formid, self::PREFIX, $this->action, 'target-'.$this->formid );
+		$form .= sprintf( '<form id="%s" name="%s" class="%s" action="%s" method="POST" target="target-%s">' . PHP_EOL,
+			$this->formid, $this->formid, self::PREFIX, $this->action, $this->formid );
 		$form .= sprintf( '   <legend class="%s__legend"></legend>' . PHP_EOL, self::PREFIX );
 		$form .= sprintf( '   <fieldset class=%s__fieldset>' . PHP_EOL, self::PREFIX );
 		$form .= sprintf( '   <legend>%s</legend>' . PHP_EOL, $this->legend );
@@ -159,7 +161,7 @@ EOM;
 
 		//close and return
 		$form .= '</form>' . PHP_EOL;
-
+		$form .= sprintf( '<iframe class="%s__target" name="target-%s" height="0"></iframe>' . PHP_EOL, self::PREFIX, $this->formid );
 
 		return $form;
 	}

@@ -16,7 +16,7 @@ class ELeadLightboxMailer {
 	public $maxcost = 5.0;
 	public $phone = '555-555-1212';
 	public $replyto = '';
-	public $provider = 'RC Energy Solutions';
+	public $provider = '"RC Energy Solutions"';
 	private $email = '';
 	private $size = 0;
 	private $input = array(
@@ -32,7 +32,7 @@ class ELeadLightboxMailer {
 		'sent' => false,
 		'message' => ''
 	);
-	private $debug = true;
+	private $debug = false;
 	private $log   = '/var/tmp/php_error.log';
 
 	function __construct() {
@@ -94,29 +94,27 @@ class ELeadLightboxMailer {
 		$max     = $this->max_cost();
 		$message = <<< EOM
 		
-		<p>Hello {$name},</p>
-		<p>
-		Thanks for using the RC Energy Solutions solar cost calculator. We estimate that your solar 
-		installation providing {$size}kWh will cost between <strong>{$min}</strong> and <strong>{$max}.</p>
-		<p>
-		There are many factors that can influence where you fall within this range. Here are just a few:</p>
-		<ul>
-		<li>Roof pitch</li>
-		<li>Available roof space</li>
-		<li>Type of roofing material</li>
-		<li>Average daily sunlight at your home</li>
-		<li>Type of solar panel</li>
-		<li>Any need for electrical work</li>
-		<ul>
-		<p>
-		One of our solar experts will be in touch shortly to schedule a free, no-pressure in-home consultation 
-		so we can provide you with more information and an exact quote.</p>
-		<p>
-		Thank you for contacting RC Energy Solutions about your solar power needs. 
-		We look forward to working with you! </p>
+Hello {$name},
 
-		<p>Justin Lonson
-		<br>President, RC Energy Solutions</p>
+Thanks for using the RC Energy Solutions solar cost calculator. We estimate that your solar installation providing {$size} kW will cost between {$min} and {$max}.
+
+There are many factors that can influence where you fall within this range. Here are just a few:
+
+- Roof pitch
+- Available roof space
+- Type of roofing material
+- Average daily sunlight at your home
+- Type of solar panel
+- A need for electrical work
+	
+
+One of our solar experts will be in touch shortly to schedule a free, no-pressure in-home consultation so we can provide you with more information and an exact quote.
+	
+Thank you for contacting RC Energy Solutions about your solar power needs. We look forward to working with you! 
+
+Justin Lonson
+President, RC Energy Solutions
+
 EOM;
 		return $message;
 	}
@@ -140,8 +138,9 @@ EOM;
 		// email header and body
 		$address = $this->email;
 		$subject = "Your quick quote";
-		$header  = "From: {$this->provider}\r\n";
-		$header .= "Reply-To: {$this->replyto}\r\n";
+		$header  = "\r\n";
+		// $header  = "From: {$this->provider}\r\n";
+		// $header .= "Reply-To: {$this->replyto}\r\n";
 		// $header .= "X-Mailer: PHP/" . phpversion() . "\r\n";
 
 		$message = $this->get_message();

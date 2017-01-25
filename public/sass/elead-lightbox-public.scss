@@ -20,6 +20,8 @@ $field-font-size: 1rem;
 $linkcolor: #f8a13c;
 $errorcolor: #e43b0f;
 $tooltip-background: #686752;
+$error-background: #883f31;
+$emphasis-color: #883f31;
 $tooltip-color: #fff;
 $hover-opacity: 0.58;
 $cta-font-size: 0.8rem;
@@ -42,6 +44,7 @@ $modal-z-index: 999999;
     line-height: 1;
     padding: 0;
     position: relative;
+    z-index: auto;
     width: 96%;
     margin-left: 2%;
     height: $cta-height;
@@ -87,6 +90,7 @@ $modal-z-index: 999999;
   &__tooltip:after {
     content: "";
     position: absolute;
+    z-index: $modal-z-index - 5;
     top: 100%;
     left: 20%;
     margin-left: -10px;
@@ -137,20 +141,12 @@ $modal-z-index: 999999;
     content: " \232A";
     transition-duration: 250ms;
   }
-  &__error {
-    margin: 1rem auto;
-    width: 100%;
-    color: $errorcolor;
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-
 }
 
 #{$base}-form,
 #{$base}-qqform {
   position: relative;
+  z-index: auto;
   width: 100%;
   margin: auto;
   min-height: 20em;
@@ -166,6 +162,7 @@ $modal-z-index: 999999;
   &__fieldset {
     display: block;
     position: relative;
+    z-index: auto;
     width: 100%;
     border-width: 0;
     padding: 0;
@@ -175,11 +172,13 @@ $modal-z-index: 999999;
   &__input {
     display: block;
     position: relative;
+    z-index: auto;
     width: 100%;
     float: left;
     input[type="text"] {
       display: block;
       position: relative;
+      z-index: auto;
       box-sizing: border-box;
       padding: 0.5em;
       width: 100%;
@@ -197,19 +196,12 @@ $modal-z-index: 999999;
       font-size: inherit;
     }
   }
-  &__error {
-    margin: 0 0 0.5em 0;
-    padding-left: 0.5em;
-    width: 100;
-    color: $errorcolor;
-    font-size: 1em;
-    font-weight: bold;
-  }
   &__submit {
     margin: 2em auto;
     display: block;
     font-weight: normal;
     position: relative;
+    z-index: auto;
     width: 75%;
     max-width: 20rem;
     transition-property: width, max-width;
@@ -249,18 +241,66 @@ $modal-z-index: 999999;
     transition-timing-function: ease-in-out;
   }
   &__systemsize {
-    font-size: 3em;
+    font-size: 1.5rem;
     font-weight: bolder;
+    color: $emphasis-color;
+  }
+  &__target {
+    position: absolute;
+    visibility: hidden;
+  }
+
+}
+
+#{$base}-cta,
+#{$base}-qquote,
+#{$base}-form,
+#{$base}-qqform {
+
+  &__error {
+    background-color: $error-background;
+    border-radius: 6px;
+    color: $tooltip-color;
+    display: none;
+    left: 25%;
+    margin-left: -60px;
+    opacity: 0;
+    padding: 10px;
+    position: absolute;
+    text-align: center;
+    top: 125%;
+    transition: opacity 1s;
+    width: 100%;
+    z-index: $modal-z-index - 5;
+  }
+  &__error:after {
+    border-color: transparent transparent $error-background transparent;
+    border-style: solid;
+    border-width: 10px;
+    content: "";
+    left: 20%;
+    margin-left: -10px;
+    position: absolute;
+    bottom: 100%;
+    z-index: $modal-z-index - 5;
   }
 }
 
+#{$base}-form-response,
 #{$base}-qqform-response {
-  visibility: hidden;
+  display: none;
   position: absolute;
+  z-index: auto;
   margin: 0 0.75rem;
+  font-size: 1.2rem;
+  line-height: 1.2;
 
   &__heading {
     font-size: 1.2em;
+  }
+
+  &__email {
+    font-weight: bolder;
   }
 
   p {
@@ -268,12 +308,6 @@ $modal-z-index: 999999;
     margin-bottom: 1em;
     color: black;
   }
-
-  &__target {
-    position: absolute;
-    visibility: hidden;
-  }
-
 }
 
 #{$base}-modal {
@@ -320,6 +354,7 @@ $modal-z-index: 999999;
   }
   &__header {
     position: relative;
+    z-index: auto;
     display: block;
     color: black;
     font-size: 1.2em;
@@ -333,6 +368,7 @@ $modal-z-index: 999999;
   }
   &__body {
     position: relative;
+    z-index: auto;
     display: block;
     width: $lightbox-width-small - 24px;
     margin: 0 12px;
@@ -341,6 +377,7 @@ $modal-z-index: 999999;
     display: block;
     padding: 0 1rem;
     position: relative;
+    z-index: auto;
     margin: 12px;
   }
 
@@ -370,9 +407,11 @@ $modal-z-index: 999999;
     &__button {
       width: 40%;
     }
+  }
+
+  #{$base}-qqform {
     &__systemsize {
-      font-size: 3em;
-      font-weight: bolder;
+      font-size: 2rem;
     }
   }
 
@@ -405,7 +444,7 @@ $modal-z-index: 999999;
         }
       }
       &__submit {
-        margin: 4em auto;
+        margin: 2em auto;
         width: 50%;
         input[type="submit"] {
         }

@@ -103,6 +103,22 @@ class ELeadLightboxForm {
 		return $html;
 	}
 
+	function get_response() {
+
+		$class = self::PREFIX . '-response';
+
+		$html = <<<EOM
+		<div class="{$class}">
+		<p>One of our solar experts will be in touch shortly to schedule a free, no-pressure in-home consultation so we can provide you with more information and an exact quote.</p>
+	
+		<p>Thank you for contacting RC Energy Solutions about your solar power needs. We look forward to working with you!</p>
+		</div>
+		
+EOM;
+
+		return $html;
+	}
+
 
 	function get_form( $hide_zipcode = false, $show_address = false ) {
 		if ( ! $this->action ) {
@@ -113,8 +129,9 @@ class ELeadLightboxForm {
 		if ( ! $url ) {
 			$url = '#';
 		}
-		$form = sprintf( '<form id="%s" name="%s" class="%s" action="%s" method="POST" autocomplete="off">' . PHP_EOL,
-			$this->formid, $this->formid, self::PREFIX, $this->action );
+		$form = $this->get_response();
+		$form .= sprintf( '<form id="%s" name="%s" class="%s" action="%s" method="POST" target="target-%s">' . PHP_EOL,
+			$this->formid, $this->formid, self::PREFIX, $this->action, $this->formid );
 		$form .= sprintf( '   <legend class="%s__legend"></legend>' . PHP_EOL, self::PREFIX );
 		$form .= sprintf( '   <fieldset class=%s__fieldset>' . PHP_EOL, self::PREFIX );
 		$form .= sprintf( '   <legend>%s</legend>' . PHP_EOL, $this->legend );
@@ -122,11 +139,12 @@ class ELeadLightboxForm {
 		// hidden input
 		$form .= sprintf( '  <input type="hidden" name="sourcetype" value="%s">' . PHP_EOL, 'Website' );
 		$form .= sprintf( '  <input type="hidden" name="source" value="%s">' . PHP_EOL, 'eLead Form' );
-		$form .= sprintf( '  <input type="hidden" name="retURL" value="%s">' . PHP_EOL, $url );
+
+		// $form .= sprintf( '  <input type="hidden" name="retURL" value="%s">' . PHP_EOL, $url );
 
 		// form input fields
 		$form .= $this->get_text_input( 'First Name' );
-		$form .= $this->get_text_input( 'Last Name' );
+		$form .= $this->get_text_input( 'Last Name', $required = false );
 		$form .= $this->get_text_input( 'Email', $required = false );
 		$form .= $this->get_text_input( 'Phone Number' );
 		if ( $show_address ) {
@@ -153,6 +171,8 @@ class ELeadLightboxForm {
 
 		//close and return
 		$form .= '</form>' . PHP_EOL;
+
+		$form .= sprintf( '<iframe class="%s__target" name="target-%s" height="0"></iframe>' . PHP_EOL, self::PREFIX, $this->formid );
 
 		return $form;
 	}
