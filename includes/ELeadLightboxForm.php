@@ -111,7 +111,7 @@ class ELeadLightboxForm {
 		<div class="{$class}">
 		<p>One of our solar experts will be in touch shortly to schedule a free, no-pressure in-home consultation so we can provide you with more information and an exact quote.</p>
 	
-		<p>Thank you for contacting RC Energy Solutions about your solar power needs. We look forward to working with you!</p>
+		<p>Thank you for contacting RC Energy Solutions about your home energy needs. We look forward to working with you!</p>
 		</div>
 		
 EOM;

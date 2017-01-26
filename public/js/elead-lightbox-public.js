@@ -843,7 +843,7 @@ if (typeof module !== 'undefined' && module.exports) {
         var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
             if ($header.length) {
-                $header.html('<p>Get a free home-energy consultation in <strong>' + city + '</strong>.</p>');
+                $header.html('<div>Get a free home-energy consultation in <strong>' + city + '</strong>.</div>');
             }
             var $fillme = $form.find('input[name="' + ctaEntry + '"]');
             if ($fillme.length) {
@@ -964,7 +964,7 @@ if (typeof module !== 'undefined' && module.exports) {
         var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
             if ($header.length) {
-                $header.html('<p>Your solar system size is</p>' + '<p class="elead-lightbox-qqform__systemsize">' + value + ' kWh</p>');
+                $header.html('<div>Your solar system size is</div>' + '<div class="elead-lightbox-qqform__systemsize">' + value + ' kWh</div>');
             }
             var $fillme = $form.find('input[name="dailyaveragekwh"]');
             if ($fillme.length) {

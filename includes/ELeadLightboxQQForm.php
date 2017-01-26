@@ -102,17 +102,16 @@ class ELeadLightboxQQForm {
 	function get_response() {
 
 		$class = self::PREFIX . '-response';
+		$permalink = get_permalink( get_page_by_path( 'solar-financing' ) );
 
 		$html = <<<EOM
 		<div class="{$class}">
 		<p class="{$class}__heading">Success!</p>
 		<p> We are sending your quote to <span class="{$class}__email"></span>. 
 		If you do not see the email shortly, please check your spam folder.</p>
+		<p>Are you looking for financing? <a href="{$permalink}">Apply online.</a></p>
+		</div>
 EOM;
-		$html .= '<p>Are you looking for financing? ';
-		$html .= '<a href="<?php get_permalink( get_page_by_path( \'solar-financing\' ) ); ?>">Apply online.</a>';
-		$html .= '</div>';
-
 		return $html;
 	}
 

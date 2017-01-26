@@ -68,9 +68,9 @@ class ELeadLightboxModal {
 		$html .= sprintf( '        <div class="%s__body">' . "\n", self::PREFIX );
 		$html .= sprintf( "           %s\n", $this->body );
 		$html .= sprintf( "        </div>\n" );
-		$html .= sprintf( '        <div class="%s__footer">' . "\n", self::PREFIX );
-		$html .= sprintf( "           %s\n", $this->footer );
-		$html .= sprintf( "        </div>\n" );
+		// $html .= sprintf( '        <div class="%s__footer">' . "\n", self::PREFIX );
+		// $html .= sprintf( "           %s\n", $this->footer );
+		// $html .= sprintf( "        </div>\n" );
 		$html .= sprintf( "      </div>\n" );
 		$html .= sprintf( "    </div>\n" );
 		$html .= sprintf( "  </div>\n" );

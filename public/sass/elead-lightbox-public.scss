@@ -15,7 +15,7 @@ $medium: 620px;
 $large: 1024px;
 $lightbox-width-small: 300px;
 $lightbox-width-medium: 500px;
-$lightbox-min-height: 400px;
+$lightbox-min-height: 300px;
 $field-font-size: 1rem;
 $linkcolor: #f8a13c;
 $errorcolor: #e43b0f;
@@ -197,7 +197,7 @@ $modal-z-index: 999999;
     }
   }
   &__submit {
-    margin: 2em auto;
+    margin: 1em auto;
     display: block;
     font-weight: normal;
     position: relative;
@@ -341,12 +341,13 @@ $modal-z-index: 999999;
   &__close {
     display: block;
     position: absolute;
-    top: 12px;
-    right: 12px;
+    bottom: 1rem;
+    right: 1rem;
     font-size: 48px;
     font-weight: lighter;
     text-decoration: none;
     color: #0b0b0b;
+    opacity: 0.5;
     overflow: visible;
     text-align: left;
     z-index: $modal-z-index + 1;
@@ -359,7 +360,7 @@ $modal-z-index: 999999;
     color: black;
     font-size: 1.2em;
     line-height: 1.7;
-    margin: 0.5rem 2rem;
+    margin: 1rem 1rem 0;
     padding: 0 1rem;
     text-align: center;
     p {
@@ -428,6 +429,7 @@ $modal-z-index: 999999;
       // margin-top: 2rem;
       width: $lightbox-width-medium - 24px;
     }
+    #{$base}-qqform,
     #{$base}-form {
       &__input {
         width: 50%;
@@ -444,7 +446,7 @@ $modal-z-index: 999999;
         }
       }
       &__submit {
-        margin: 2em auto;
+        margin: 1em auto;
         width: 50%;
         input[type="submit"] {
         }
