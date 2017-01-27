@@ -12,12 +12,11 @@ class ELeadLightboxQQForm {
 	protected static $formn = 0;
 	protected static $fieldn = 0;
 	private $action, $url, $cta;
-	private $header = '';
 	private $formid = '';
 	private $legend = 'Complete the form for an instant quote.';
 	private $show = array(
 		'usage'   => false,
-		'address' => false,
+		'address' => true,
 		'zipcode' => true
 	);
 
@@ -50,8 +49,8 @@ class ELeadLightboxQQForm {
 		}
 	}
 
-	function set_header( $text ) {
-		$this->header = trim( $text );
+	function set_legend( $text ) {
+		$this->legend = trim( $text );
 	}
 
 	function hide( $field ) {
@@ -72,14 +71,18 @@ class ELeadLightboxQQForm {
 
 	private
 	function get_text_input(
-		$placeholder, $required = false, $minlength = 2, $maxlength = 100
+		$placeholder, $addclass='', $required = false, $minlength = 2, $maxlength = 100
 	) {
 		self::$fieldn ++;
 		$id          = sprintf( '%s-input-%d', $this->formid, self::$fieldn );
 		$placeholder = strtolower( trim( strip_tags( $placeholder ) ) );
 		$name        = strtolower( preg_replace( '/\W+/', '', $placeholder ) );
 		$required    = $required ? 'required' : '';
-		$html        = sprintf( '  <label for="%s" class="%s">' . PHP_EOL, $id, self::PREFIX . '__input' );
+		$class       = self::PREFIX . '__input';
+		if ( $addclass ) {
+			$class .= ' ' . self::PREFIX . "__{$addclass}";
+		}
+		$html = sprintf( '  <label for="%s" class="%s">' . PHP_EOL, $id, $class );
 		$html .= sprintf( '    <input type="text" id="%s" name="%s" minlength="%d" maxlength="%d" %s placeholder="%s">',
 			$id, $name, $minlength, $maxlength, $required, $placeholder );
 		$html .= sprintf( '    <div class="%s__error"></div>' . PHP_EOL, self::PREFIX );
@@ -101,7 +104,7 @@ class ELeadLightboxQQForm {
 
 	function get_response() {
 
-		$class = self::PREFIX . '-response';
+		$class     = self::PREFIX . '-response';
 		$permalink = get_permalink( get_page_by_path( 'solar-financing' ) );
 
 		$html = <<<EOM
@@ -109,9 +112,10 @@ class ELeadLightboxQQForm {
 		<p class="{$class}__heading">Success!</p>
 		<p> We are sending your quote to <span class="{$class}__email"></span>. 
 		If you do not see the email shortly, please check your spam folder.</p>
-		<p>Are you looking for financing? <a href="{$permalink}">Apply online.</a></p>
+		<p>Are you looking for financing?<br><a href="{$permalink}">Apply online.</a></p>
 		</div>
 EOM;
+
 		return $html;
 	}
 
@@ -128,10 +132,8 @@ EOM;
 		$form = $this->get_response();
 		$form .= sprintf( '<form id="%s" name="%s" class="%s" action="%s" method="POST" target="target-%s">' . PHP_EOL,
 			$this->formid, $this->formid, self::PREFIX, $this->action, $this->formid );
-		$form .= sprintf( '   <legend class="%s__legend"></legend>' . PHP_EOL, self::PREFIX );
+		$form .= sprintf( '   <legend class="%s__legend">%s</legend>' . PHP_EOL, self::PREFIX, $this->legend );
 		$form .= sprintf( '   <fieldset class=%s__fieldset>' . PHP_EOL, self::PREFIX );
-		$form .= sprintf( '   <legend>%s</legend>' . PHP_EOL, $this->legend );
-
 		// hidden input
 		$form .= sprintf( '  <input type="hidden" name="sourcetype" value="%s">' . PHP_EOL, 'Website' );
 		$form .= sprintf( '  <input type="hidden" name="source" value="%s">' . PHP_EOL, 'eLead Form' );
@@ -143,10 +145,10 @@ EOM;
 		$form .= $this->get_text_input( 'Email' );
 		$form .= $this->get_text_input( 'Phone Number' );
 		if ( $this->show['address'] ) {
-			$form .= $this->get_text_input( 'Street Address' );
+			$form .= $this->get_text_input( 'Street Address', 'hidemobile'  );
 		}
 		if ( $this->show['zipcode'] ) {
-			$form .= $this->get_text_input( 'Zip Code' );
+			$form .= $this->get_text_input( 'Zip Code', 'hidemobile' );
 		}
 		if ( $this->show['usage'] ) {
 			$form .= $this->get_text_input( 'Daily Average kWh' );

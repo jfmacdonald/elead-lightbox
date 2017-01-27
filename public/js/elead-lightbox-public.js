@@ -614,7 +614,6 @@ if (typeof module !== 'undefined' && module.exports) {
 (function ($) {
     'use strict';
 
-    var ctaEntry = 'zipcode';
     var geocode = 'http://maps.googleapis.com/maps/api/geocode/json?address=';
 
     var zipCity = {
@@ -840,12 +839,12 @@ if (typeof module !== 'undefined' && module.exports) {
 
     function display_form_modal(zipcode, city, $modal) {
         var $form = $modal.find('.elead-lightbox-form');
-        var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
-            if ($header.length) {
-                $header.html('<div>Get a free home-energy consultation in <strong>' + city + '</strong>.</div>');
+            var $city = $form.find('.elead-lightbox-form__city');
+            if ($city.length) {
+                $city.text(city);
             }
-            var $fillme = $form.find('input[name="' + ctaEntry + '"]');
+            var $fillme = $form.find('input[name="zipcode"]');
             if ($fillme.length) {
                 $fillme.val(zipcode);
             }
@@ -959,13 +958,12 @@ if (typeof module !== 'undefined' && module.exports) {
         }
     }
 
-    function display_quickquote_modal(value, $modal) {
+    function display_qqform_modal(value, $modal) {
         var $form = $modal.find('.elead-lightbox-qqform');
         var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
-            if ($header.length) {
-                $header.html('<div>Your solar system size is</div>' + '<div class="elead-lightbox-qqform__systemsize">' + value + ' kWh</div>');
-            }
+            var $size = $form.find('.elead-lightbox-qqform__systemsize');
+            $size.text(value + ' kWh');
             var $fillme = $form.find('input[name="dailyaveragekwh"]');
             if ($fillme.length) {
                 $fillme.val(value);
@@ -990,7 +988,7 @@ if (typeof module !== 'undefined' && module.exports) {
             return;
         }
         var value = system_size(match[1]);
-        display_quickquote_modal(value, $modal);
+        display_qqform_modal(value, $modal);
     }
 
     function handle_qquote($) {
@@ -1029,10 +1027,10 @@ if (typeof module !== 'undefined' && module.exports) {
                 $(this).closest('.elead-lightbox-modal').css('display', 'none');
                 $('.elead-lightbox-qqform__target').off('load');
                 $('.elead-lightbox-qqform').css({ display: 'block' });
-                $('.elead-lightbox-qqform-response').css({ display: 'none' });
+                $('.elead-lightbox-qqform-response').css({ display: 'none', position: 'absolute' });
                 $('.elead-lightbox-form__target').off('load');
                 $('.elead-lightbox-form').css({ display: 'block' });
-                $('.elead-lightbox-form-response').css({ display: 'none' });
+                $('.elead-lightbox-form-response').css({ display: 'none', position: 'absolute' });
             });
         }
     }
@@ -1065,7 +1063,10 @@ if (typeof module !== 'undefined' && module.exports) {
             $(this).submit(function (e) {
                 $iframe.on('load', function (e) {
                     $form.css({ display: 'none' });
-                    $response.css({ display: 'block' });
+                    $response.css({
+                        display: 'block',
+                        position: 'relative'
+                    });
                 });
             });
         });
@@ -1086,7 +1087,7 @@ if (typeof module !== 'undefined' && module.exports) {
             var $response = $form.parent().find('.elead-lightbox-qqform-response');
             var $emailSpan = $form.parent().find('.elead-lightbox-qqform-response__email');
             var $iframe = $form.parent().find('.elead-lightbox-qqform__target');
-            validators[i] = new FormValidator(this.id, [{ name: 'firstname', display: 'first name', rules: 'required' }, { name: 'lastname', display: 'last name', rules: '' }, { name: 'email', display: 'email', rules: 'required|valid_email' }, { name: 'phonenumber', display: 'phone number', rules: 'required|callback_valid_phone' }, { name: 'avekwh', display: 'daily average kWh', rules: 'required|callback_valid_decimal' }, { name: 'zipcode', display: 'Zip Code', rules: 'required|callback_valid_zipcode' }], function (errors, event) {
+            validators[i] = new FormValidator(this.id, [{ name: 'firstname', display: 'first name', rules: 'required' }, { name: 'lastname', display: 'last name', rules: '' }, { name: 'email', display: 'email', rules: 'required|valid_email' }, { name: 'phonenumber', display: 'phone number', rules: 'required|callback_valid_phone' }, { name: 'avekwh', display: 'daily average kWh', rules: 'required|callback_valid_decimal' }, { name: 'zipcode', display: 'Zip Code', rules: 'callback_valid_zipcode' }], function (errors, event) {
                 for (var n = 0; n < errors.length; n++) {
                     var name = errors[n].name;
                     var $errorBox = $form.find('input[name="' + name + '"]').siblings('div');
@@ -1123,7 +1124,10 @@ if (typeof module !== 'undefined' && module.exports) {
                     $iframe.on('load', function (e) {
                         $form.css({ display: 'none' });
                         $emailSpan.text(address);
-                        $response.css({ display: 'block' });
+                        $response.css({
+                            display: 'block',
+                            position: 'relative'
+                        });
                     });
                 });
                 // hold off on form submission until email is sent

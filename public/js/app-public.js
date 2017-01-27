@@ -1,7 +1,6 @@
 (function ($) {
     'use strict';
 
-    var ctaEntry = 'zipcode';
     var geocode = 'http://maps.googleapis.com/maps/api/geocode/json?address=';
 
     var zipCity = {
@@ -228,12 +227,12 @@
 
     function display_form_modal(zipcode, city, $modal) {
         var $form = $modal.find('.elead-lightbox-form');
-        var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
-            if ($header.length) {
-                $header.html('<div>Get a free home-energy consultation in <strong>' + city + '</strong>.</div>');
+            var $city = $form.find('.elead-lightbox-form__city');
+            if ($city.length) {
+                $city.text(city);
             }
-            var $fillme = $form.find('input[name="' + ctaEntry + '"]');
+            var $fillme = $form.find('input[name="zipcode"]');
             if ($fillme.length) {
                 $fillme.val(zipcode);
             }
@@ -347,15 +346,12 @@
         }
     }
 
-    function display_quickquote_modal(value, $modal) {
+    function display_qqform_modal(value, $modal) {
         var $form = $modal.find('.elead-lightbox-qqform');
         var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
-            if ($header.length) {
-                $header.html('<div>Your solar system size is</div>'
-                    + '<div class="elead-lightbox-qqform__systemsize">'
-                    + value + ' kWh</div>');
-            }
+            var $size = $form.find('.elead-lightbox-qqform__systemsize');
+            $size.text(value + ' kWh');
             var $fillme = $form.find('input[name="dailyaveragekwh"]');
             if ($fillme.length) {
                 $fillme.val(value);
@@ -380,7 +376,7 @@
             return;
         }
         var value = system_size(match[1]);
-        display_quickquote_modal(value, $modal);
+        display_qqform_modal(value, $modal);
     }
 
     function handle_qquote($) {
@@ -419,10 +415,10 @@
                 $(this).closest('.elead-lightbox-modal').css('display', 'none');
                 $('.elead-lightbox-qqform__target').off('load');
                 $('.elead-lightbox-qqform').css({display: 'block'});
-                $('.elead-lightbox-qqform-response').css({display: 'none'});
+                $('.elead-lightbox-qqform-response').css({display: 'none', position: 'absolute'});
                 $('.elead-lightbox-form__target').off('load');
                 $('.elead-lightbox-form').css({display: 'block'});
-                $('.elead-lightbox-form-response').css({display: 'none'});
+                $('.elead-lightbox-form-response').css({display: 'none', position: 'absolute'});
             });
         }
     }
@@ -459,7 +455,10 @@
             $(this).submit(function (e) {
                 $iframe.on('load', function (e) {
                     $form.css({display: 'none'});
-                    $response.css({display: 'block'});
+                    $response.css({
+                        display: 'block',
+                        position: 'relative'
+                    });
                 });
             });
         });
@@ -486,7 +485,7 @@
                 {name: 'email', display: 'email', rules: 'required|valid_email'},
                 {name: 'phonenumber', display: 'phone number', rules: 'required|callback_valid_phone'},
                 {name: 'avekwh', display: 'daily average kWh', rules: 'required|callback_valid_decimal'},
-                {name: 'zipcode', display: 'Zip Code', rules: 'required|callback_valid_zipcode'}
+                {name: 'zipcode', display: 'Zip Code', rules: 'callback_valid_zipcode'}
             ], function (errors, event) {
                 for (var n = 0; n < errors.length; n++) {
                     var name = errors[n].name;
@@ -526,7 +525,10 @@
                         $iframe.on('load', function (e) {
                             $form.css({display: 'none'});
                             $emailSpan.text(address);
-                            $response.css({display: 'block'});
+                            $response.css({
+                                display: 'block',
+                                position: 'relative'
+                            });
                         });
 
                     });

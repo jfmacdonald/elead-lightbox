@@ -13,10 +13,9 @@ class ELeadLightboxForm {
 	protected static $fieldn = 0;
 	private $action, $url, $cta;
 	private $service = array();
-	private $header = '';
 	private $service_header = '';
 	private $formid = '';
-	private $legend = 'Please provide';
+	private $legend = 'Get a free home-energy consultation.';
 
 	function __construct(
 		$endpoint = '#',
@@ -46,8 +45,8 @@ class ELeadLightboxForm {
 		}
 	}
 
-	function set_header( $text ) {
-		$this->header = trim( $text );
+	function set_legend( $text ) {
+		$this->legend = trim( $text );
 	}
 
 	function set_service( $description ) {
@@ -109,7 +108,7 @@ class ELeadLightboxForm {
 
 		$html = <<<EOM
 		<div class="{$class}">
-		<p>One of our solar experts will be in touch shortly to schedule a free, no-pressure in-home consultation so we can provide you with more information and an exact quote.</p>
+		<p>One of our team members will be in touch shortly to schedule a free, no-pressure in-home consultation so we can provide you with more information and an exact quote.</p>
 	
 		<p>Thank you for contacting RC Energy Solutions about your home energy needs. We look forward to working with you!</p>
 		</div>
@@ -132,9 +131,8 @@ EOM;
 		$form = $this->get_response();
 		$form .= sprintf( '<form id="%s" name="%s" class="%s" action="%s" method="POST" target="target-%s">' . PHP_EOL,
 			$this->formid, $this->formid, self::PREFIX, $this->action, $this->formid );
-		$form .= sprintf( '   <legend class="%s__legend"></legend>' . PHP_EOL, self::PREFIX );
+		$form .= sprintf( '   <legend class="%s__legend">%s</legend>' . PHP_EOL, self::PREFIX, $this->legend );
 		$form .= sprintf( '   <fieldset class=%s__fieldset>' . PHP_EOL, self::PREFIX );
-		$form .= sprintf( '   <legend>%s</legend>' . PHP_EOL, $this->legend );
 
 		// hidden input
 		$form .= sprintf( '  <input type="hidden" name="sourcetype" value="%s">' . PHP_EOL, 'Website' );

@@ -14,9 +14,8 @@ class ELeadLightboxMailer {
 
 	public $mincost = 3.35;
 	public $maxcost = 5.0;
-	public $phone = '555-555-1212';
-	public $replyto = '';
-	public $provider = '"RC Energy Solutions"';
+	public $replyto = '"RC Energy Solutions" <contact@rcenergysolutions.com>';
+	public $provider = '"RC Energy Solutions" <contact@rcenergysolutions.com>';
 	private $email = '';
 	private $size = 0;
 	private $input = array(
@@ -108,12 +107,17 @@ There are many factors that can influence where you fall within this range. Here
 - A need for electrical work
 	
 
-One of our solar experts will be in touch shortly to schedule a free, no-pressure in-home consultation so we can provide you with more information and an exact quote.
+One of our team members will be in touch shortly to schedule a free, no-pressure in-home consultation so we can provide you with more information and an exact quote.
 	
 Thank you for contacting RC Energy Solutions about your solar power needs. We look forward to working with you! 
 
 Justin Lonson
+
 President, RC Energy Solutions
+
+(760) 504-9273
+contact@rcenergysolutions.com 
+
 
 EOM;
 		return $message;
@@ -138,10 +142,8 @@ EOM;
 		// email header and body
 		$address = $this->email;
 		$subject = "Your quick quote";
-		$header  = "\r\n";
-		// $header  = "From: {$this->provider}\r\n";
-		// $header .= "Reply-To: {$this->replyto}\r\n";
-		// $header .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+		$header  = "From: {$this->provider}\r\n";
+		$header .= "Reply-To: {$this->replyto}\r\n";
 
 		$message = $this->get_message();
 		$this->debug("MESSAGE: ". $message);

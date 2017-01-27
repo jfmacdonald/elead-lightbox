@@ -62,15 +62,9 @@ class ELeadLightboxModal {
 		$html .= sprintf( '    <div class="%s__wrapper">' . "\n", self::PREFIX );
 		$html .= sprintf( '      <div class="%s__lightbox">' . "\n", self::PREFIX );
 		$html .= sprintf( '        <a class="%s__close" href="#%s" aria-hidden="true">&times;</a>' . "\n", self::PREFIX, self::PREFIX );
-		$html .= sprintf( '        <div class="%s__header">' . "\n", self::PREFIX );
-		$html .= sprintf( "           %s\n", $this->header );
-		$html .= sprintf( "        </div>\n" );
 		$html .= sprintf( '        <div class="%s__body">' . "\n", self::PREFIX );
 		$html .= sprintf( "           %s\n", $this->body );
 		$html .= sprintf( "        </div>\n" );
-		// $html .= sprintf( '        <div class="%s__footer">' . "\n", self::PREFIX );
-		// $html .= sprintf( "           %s\n", $this->footer );
-		// $html .= sprintf( "        </div>\n" );
 		$html .= sprintf( "      </div>\n" );
 		$html .= sprintf( "    </div>\n" );
 		$html .= sprintf( "  </div>\n" );

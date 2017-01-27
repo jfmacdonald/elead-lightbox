@@ -80,20 +80,22 @@ function elead_lightbox_form() {
 
 function elead_lightbox_cta() {
 	$form = get_elead_lightbox_form();
+	$form->set_legend( 'Get a free home-energy consultation in <span class="elead-lightbox-form__city"></span>.' );
 	$cta  = new ELeadLightboxCTA( $form );
 
 	return $cta->get_html();
 }
 
 function get_elead_lightbox_qqform() {
-	$rtn_url = get_permalink( get_page_by_path( 'thank-you' ) );
 	$test     = false;
 	$endpoint = $test ?
 		'https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8' :
 		'https://rcenergysolutions.secure.force.com/services/apexrest/i360/eLead';
 	$form     = new ELeadLightboxQQForm();
 	$form->set_endpoint( $endpoint );
-	$form->set_returnURL( $rtn_url );
+	$form->set_legend(   '<div>Your solar system size is</div>'
+	                   . '<div class="elead-lightbox-qqform__systemsize"></div>'
+	                   . '<div>Get an instant quote.</div>' );
 
 	return $form;
 }
