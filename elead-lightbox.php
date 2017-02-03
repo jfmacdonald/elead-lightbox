@@ -12,7 +12,7 @@
  * Plugin Name:       ELead Lightbox
  * Plugin URI:        https://jfmacdonald.com
  * Description:       CTA and form for submitting a quote request to a Force.com CRM.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Author:            John Farrell MacDonald
  * Author URI:        https://jfmacdonald.com
  * Text Domain:       elead-lightbox-locale
