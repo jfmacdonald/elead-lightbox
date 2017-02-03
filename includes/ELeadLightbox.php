@@ -9,6 +9,8 @@
  * @author     John Farrell MacDonald <john@jfmacdonald.com>
  */
 class ELeadLightbox {
+	const FONTAWESOME = 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css';
+
 	private static $instance;
 
 	public static function bootstrap() {
@@ -118,7 +120,9 @@ class ELeadLightbox {
 	function register_public_hooks() {
 		$plugin_dir = plugin_dir_url( dirname( __FILE__ ) );
 		wp_register_style( $this->style_handle, $plugin_dir . '/public/css/' . $this->plugin_name . '-public.css' );
+		wp_register_style( $this->style_handle . '-fa', self::FONTAWESOME );
 		wp_enqueue_style( $this->style_handle );
+		wp_enqueue_style( $this->style_handle . '-fa' );
 		wp_register_script( $this->script_handle, $plugin_dir . '/public/js/' . $this->plugin_name . '-public.min.js',
 			array( 'jquery' ), '', true );
 		wp_enqueue_script( $this->script_handle );

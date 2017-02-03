@@ -16,7 +16,7 @@ class ELeadLightboxQuickQuote {
 	function __construct(
 		$form,
 		$call_to_action = 'calculate',
-		$input = 'Avg Daily kWh',
+		$input = 'Daily Avg. kWh',
 		$help = 'Enter <strong>daily average kWh</strong> (kiloWatt hours) as shown on your electric bill to calculate solar system size.'
 	) {
 		self::$ctan ++;

@@ -25,33 +25,33 @@ class ELeadLightboxMailer {
 		'phonenumber'   => '',
 		'streetaddress' => '',
 		'zipcode'       => '',
-		'dailyaveragekwh' => ''
+		'dailyavekwh'   => ''
 	);
 	private $response = array(
-		'sent' => false,
+		'sent'    => false,
 		'message' => ''
 	);
 	private $debug = false;
-	private $log   = '/var/tmp/php_error.log';
+	private $log = '/var/tmp/php_error.log';
 
 	function __construct() {
 		foreach ( $this->input as $property => $value ) {
 			if ( array_key_exists( $property, $_POST ) ) {
 				$this->input[ $property ] = $this->sanitize( $_POST[ $property ] );
 			}
-			$this->debug("PROPERTY $property VALUE " . $this->input[$property] );
+			$this->debug( "PROPERTY $property VALUE " . $this->input[ $property ] );
 		}
 		if ( $this->input['email'] ) {
 			$this->email = filter_var( $this->input['email'], FILTER_VALIDATE_EMAIL );
 		}
-		if ( $this->input['dailyaveragekwh'] ) {
-			$this->size = floatval( $this->input['dailyaveragekwh'] );
+		if ( $this->input['dailyavekwh'] ) {
+			$this->size = floatval( $this->input['dailyavekwh'] );
 		}
 	}
 
-	function debug($string) {
-		if ( $this->debug ){
-			error_log($string . PHP_EOL, 3, $this->log);
+	function debug( $string ) {
+		if ( $this->debug ) {
+			error_log( $string . PHP_EOL, 3, $this->log );
 		}
 	}
 
@@ -67,6 +67,7 @@ class ELeadLightboxMailer {
 
 	function get_name() {
 		$name = $this->input['firstname'] . ' ' . $this->input['lastname'];
+
 		return $name;
 	}
 
@@ -79,11 +80,11 @@ class ELeadLightboxMailer {
 	}
 
 	function min_cost() {
-		return '$' . number_format(1000 * $this->mincost * $this->size);
+		return '$' . number_format( 1000 * $this->mincost * $this->size );
 	}
 
 	function max_cost() {
-		return '$' . number_format(1000 * $this->maxcost * $this->size);
+		return '$' . number_format( 1000 * $this->maxcost * $this->size );
 	}
 
 	function get_message() {
@@ -116,10 +117,11 @@ Justin Lonson
 President, RC Energy Solutions
 
 (760) 504-9273
+
 contact@rcenergysolutions.com 
 
-
 EOM;
+
 		return $message;
 	}
 
@@ -129,34 +131,36 @@ EOM;
 		if ( ! $this->validate() ) {
 			if ( $this->size ) {
 				$this->response['message'] = 'Please enter a valid email address.';
-				$this->debug('invalid email address');
+				$this->debug( 'invalid email address' );
 			} elseif ( $this->email ) {
 				$this->response['message'] = 'Please enter daily average kWh.';
-				$this->debug('missing data entry');
+				$this->debug( 'missing data entry' );
 			} else {
 				$this->response['message'] = 'invalid email and missing entry.';
 			}
+
 			return $this->response;
 		}
 
 		// email header and body
 		$address = $this->email;
-		$subject = "Your quick quote";
+		$subject = "Your solar estimate";
 		$header  = "From: {$this->provider}\r\n";
 		$header .= "Reply-To: {$this->replyto}\r\n";
 
 		$message = $this->get_message();
-		$this->debug("MESSAGE: ". $message);
+		$this->debug( "MESSAGE: " . $message );
 
 
 		if ( ! mail( $address, $subject, $message, $header ) ) {
 			$this->response['message'] = 'Not able to send email.';
-			$this->debug('Not able to send email.');
+			$this->debug( 'Not able to send email.' );
 		} else {
-			$this->response['sent'] = true;
-			$this->response['message'] = 'Please check your email for our quick estimate.';
-			$this->debug('email sent');
+			$this->response['sent']    = true;
+			$this->response['message'] = 'Please check your email for your solar estimate.';
+			$this->debug( 'email sent' );
 		}
+
 		return $this->response;
 	}
 
@@ -166,8 +170,8 @@ $mailer = new ELeadLightboxMailer();
 
 $response = $mailer->send();
 
-echo json_encode($response);
+echo json_encode( $response );
 
-$status = $response['sent'] ? 0 : 1 ;
-exit($status);
+$status = $response['sent'] ? 0 : 1;
+exit( $status );
 

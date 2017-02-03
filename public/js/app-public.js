@@ -196,6 +196,18 @@
         return Math.round(kWsolar * (dailyKiloWattHrs / hrsSun) / 100) / 10;
     }
 
+    function titleCase(str) {
+        if ('string' !== typeof str || !str.trim()) return '';
+        return str
+            .trim()
+            .toLowerCase()
+            .split(' ')
+            .map(function (word) {
+                return word[0].toUpperCase() + word.substr(1);
+            })
+            .join(' ');
+    }
+
 
     function get_city_from_json(zipcode, results) {
         var city = '';
@@ -229,12 +241,16 @@
         var $form = $modal.find('.elead-lightbox-form');
         if ($form.length) {
             var $city = $form.find('.elead-lightbox-form__city');
+            var $cityinput = $form.find('input[name="city"]');
             if ($city.length) {
                 $city.text(city);
+                if ($cityinput.length) {
+                    $cityinput.val(city);
+                }
             }
-            var $fillme = $form.find('input[name="zipcode"]');
-            if ($fillme.length) {
-                $fillme.val(zipcode);
+            var $zipinput = $form.find('input[name="zip"]');
+            if ($zipinput.length) {
+                $zipinput.val(zipcode);
             }
         }
         $modal.css('display', 'table');
@@ -352,7 +368,7 @@
         if ($form.length) {
             var $size = $form.find('.elead-lightbox-qqform__systemsize');
             $size.text(value + ' kWh');
-            var $fillme = $form.find('input[name="dailyaveragekwh"]');
+            var $fillme = $form.find('input[name="dailyavekwh"]');
             if ($fillme.length) {
                 $fillme.val(value);
             }
@@ -426,42 +442,73 @@
     function handle_form($) {
         var validators = [];
         $('.elead-lightbox-form').each(function (i) {
-            var $form = $(this);
-            var $iframe = $form.parent().find('.elead-lightbox-form__target');
-            var $response = $form.parent().find('.elead-lightbox-form-response');
-            validators[i] = new FormValidator(this.id, [
-                {name: 'firstname', display: 'first name', rules: 'required'},
-                {name: 'lastname', display: 'last name', rules: 'required'},
-                {name: 'email', display: 'email', rules: 'valid_email'},
-                {name: 'phonenumber', display: 'phone number', rules: 'required|callback_valid_phone'},
-                {name: 'zipcode', display: 'Zip Code', rules: 'required|callback_valid_zipcode'}
-            ], function (errors, event) {
-                for (var n = 0; n < errors.length; n++) {
-                    var name = errors[n].name;
-                    var $errorBox = $form.find('input[name="' + name + '"]').siblings('div');
-                    display_error($errorBox, errors[n].message);
-                }
-            });
-            validators[i].registerCallback('valid_zipcode', function (value) {
-                return /^\d{5}$/.test(value.trim());
-            });
-            validators[i].registerCallback('valid_phone', function (value) {
-                return /^[(]?\d{3}[ ]*[-)]?[ ]*\d{3}[ ]*[\-]?[ ]*\d{4}/.test(value.trim());
-            });
-            validators[i].setMessage('required', 'Please provide %s.');
-            validators[i].setMessage('valid_email', 'Please enter a valid email address.');
-            validators[i].setMessage('valid_zipcode', 'Please enter a valid zip code.');
-            validators[i].setMessage('valid_phone', 'Please enter a valid phone number.');
-            $(this).submit(function (e) {
-                $iframe.on('load', function (e) {
-                    $form.css({display: 'none'});
-                    $response.css({
-                        display: 'block',
-                        position: 'relative'
+                var $form = $(this);
+                var $iframe = $form.parent().find('.elead-lightbox-form__target');
+                var $response = $form.parent().find('.elead-lightbox-form-response');
+                validators[i] = new FormValidator(this.id, [
+                    {name: 'firstname', display: 'first name', rules: 'required'},
+                    {name: 'lastname', display: 'last name', rules: 'required'},
+                    {name: 'email', display: 'email', rules: 'valid_email'},
+                    {name: 'phone1', display: 'phone number', rules: 'required|callback_valid_phone'},
+                    {name: 'zip', display: 'Zip Code', rules: 'required|callback_valid_zipcode'}
+                ], function (errors, event) {
+                    for (var n = 0; n < errors.length; n++) {
+                        var name = errors[n].name;
+                        var $errorBox = $form.find('input[name="' + name + '"]').siblings('div');
+                        display_error($errorBox, errors[n].message);
+                    }
+                });
+                validators[i].registerCallback('valid_zipcode', function (value) {
+                    return /^\d{5}$/.test(value.trim());
+                });
+                validators[i].registerCallback('valid_phone', function (value) {
+                    return /^[(]?\d{3}[ ]*[-)]?[ ]*\d{3}[ ]*[\-]?[ ]*\d{4}/.test(value.trim());
+                });
+                validators[i].setMessage('required', 'Please provide %s.');
+                validators[i].setMessage('valid_email', 'Please enter a valid email address.');
+                validators[i].setMessage('valid_zipcode', 'Please enter a valid zip code.');
+                validators[i].setMessage('valid_phone', 'Please enter a valid phone number.');
+                $(this).submit(function (e) {
+                    // spinner
+                    var $button = $form.find('.elead-lightbox-form__submit button');
+                    var $icon = $form.find('.elead-lightbox-form__submit i');
+                    if ($button.length && $icon.length) {
+                        $icon.addClass('fa-spinner');
+                        $button.addClass('hideafter');
+                    }
+                    // collect services checkboxes
+                    var $components = $form.find('input[name="i360__Components__c"]');
+                    var $interests = $form.find('input[name="i360__Interests__c"]');
+                    var $services = $form.find('input:checkbox:checked');
+                    if ($services.length) {
+                        var services = '';
+                        $services.each(function () {
+                            services += $(this).val() + ' ';
+                        });
+                        services = titleCase(services);
+                        if ($components.length) {
+                            $components.val(services);
+                        }
+                        if ($interests.length) {
+                            $interests.val(services);
+                        }
+                        $services.removeAttr('checked');
+                    }
+                    // response handler
+                    $iframe.on('load', function (e) {
+                        if ($icon.length && $button.length) {
+                            $icon.removeClass('fa-spinner');
+                            $button.removeClass('hideafter');
+                        }
+                        $form.css({display: 'none'});
+                        $response.css({
+                            display: 'block',
+                            position: 'relative'
+                        });
                     });
                 });
-            });
-        });
+            }
+        );
         $('.elead-lightbox-form__input > input ').on('focus', function (e) {
             clear_error($(this).siblings());
         });
@@ -483,9 +530,9 @@
                 {name: 'firstname', display: 'first name', rules: 'required'},
                 {name: 'lastname', display: 'last name', rules: ''},
                 {name: 'email', display: 'email', rules: 'required|valid_email'},
-                {name: 'phonenumber', display: 'phone number', rules: 'required|callback_valid_phone'},
-                {name: 'avekwh', display: 'daily average kWh', rules: 'required|callback_valid_decimal'},
-                {name: 'zipcode', display: 'Zip Code', rules: 'callback_valid_zipcode'}
+                {name: 'phone1', display: 'phone', rules: 'required|callback_valid_phone'},
+                {name: 'dailyavekwh', display: 'daily average kWh', rules: 'required|callback_valid_decimal'},
+                {name: 'zip', display: 'Zip Code', rules: 'callback_valid_zipcode'}
             ], function (errors, event) {
                 for (var n = 0; n < errors.length; n++) {
                     var name = errors[n].name;
@@ -507,6 +554,13 @@
             validators[i].setMessage('valid_decimal', 'Please enter a positive number.');
             // handle submit
             $(this).submit(function (e) {
+                // spinner
+                var $button = $form.find('.elead-lightbox-qqform__submit button');
+                var $icon = $form.find('.elead-lightbox-qqform__submit i');
+                if ($button.length && $icon.length) {
+                    $icon.addClass('fa-spinner');
+                    $button.addClass('hideafter');
+                }
                 // send email
                 var address = $form.find('input[name="email"]').val();
                 $.ajax({
@@ -523,6 +577,10 @@
                 })
                     .done(function (data) {
                         $iframe.on('load', function (e) {
+                            if ($button.length && $icon.length) {
+                                $icon.removeClass('fa-spinner');
+                                $button.removeClass('hideafter');
+                            }
                             $form.css({display: 'none'});
                             $emailSpan.text(address);
                             $response.css({
@@ -550,4 +608,5 @@
         }
     });
 
-})(jQuery);
+})
+(jQuery);

@@ -69,14 +69,13 @@ class ELeadLightboxQQForm {
 		return $this->formid;
 	}
 
-	private
-	function get_text_input(
-		$placeholder, $addclass='', $required = false, $minlength = 2, $maxlength = 100
+	private function get_text_input(
+		$placeholder, $fieldname = '', $addclass = '', $required = false, $minlength = 2, $maxlength = 100
 	) {
 		self::$fieldn ++;
 		$id          = sprintf( '%s-input-%d', $this->formid, self::$fieldn );
 		$placeholder = strtolower( trim( strip_tags( $placeholder ) ) );
-		$name        = strtolower( preg_replace( '/\W+/', '', $placeholder ) );
+		$name        = $fieldname ? $fieldname : strtolower( preg_replace( '/\W+/', '', $placeholder ) );
 		$required    = $required ? 'required' : '';
 		$class       = self::PREFIX . '__input';
 		if ( $addclass ) {
@@ -91,13 +90,13 @@ class ELeadLightboxQQForm {
 		return $html;
 	}
 
-	private
-	function get_submit_button() {
+	private function get_submit_button() {
 		self::$fieldn ++;
 		$id   = sprintf( '%s-input-%d', $this->formid, self::$fieldn );
-		$html = sprintf( '  <label for="%s" class="%s">' . PHP_EOL, $id, self::PREFIX . '__submit' );
-		$html .= sprintf( '    <input id="%s" type="submit" name="submit" value="%s">' . PHP_EOL, $id, $this->cta );
-		$html .= '  </label>' . PHP_EOL;
+		$html = sprintf( '  <div class="%s">' . PHP_EOL, self::PREFIX . '__submit' );
+		$html .= sprintf( '    <button id="%s" type="submit" name="submit">%s <i class="fa fa-spin"></i></button>' . PHP_EOL,
+			$id, $this->cta );
+		$html .= '</div>' . PHP_EOL;
 
 		return $html;
 	}
@@ -137,23 +136,26 @@ EOM;
 		// hidden input
 		$form .= sprintf( '  <input type="hidden" name="sourcetype" value="%s">' . PHP_EOL, 'Website' );
 		$form .= sprintf( '  <input type="hidden" name="source" value="%s">' . PHP_EOL, 'eLead Form' );
+		$form .= sprintf( '  <input type="hidden" name="i360__Components__c" id="components-%s" value="Solar">'. PHP_EOL, $this->formid);
+		$form .= sprintf( '  <input type="hidden" name="i360__Interests__c" id="interests-%s" value="Solar">'. PHP_EOL, $this->formid);
+
 		// $form .= sprintf( '  <input type="hidden" name="retURL" value="%s">' . PHP_EOL, $url );
 
 		// form input fields
 		$form .= $this->get_text_input( 'First Name' );
 		$form .= $this->get_text_input( 'Last Name' );
 		$form .= $this->get_text_input( 'Email' );
-		$form .= $this->get_text_input( 'Phone Number' );
+		$form .= $this->get_text_input( 'Phone Number', 'phone1' );
 		if ( $this->show['address'] ) {
-			$form .= $this->get_text_input( 'Street Address', 'hidemobile'  );
+			$form .= $this->get_text_input( 'Street Address', '', 'hidemobile' );
 		}
 		if ( $this->show['zipcode'] ) {
-			$form .= $this->get_text_input( 'Zip Code', 'hidemobile' );
+			$form .= $this->get_text_input( 'Zip Code', 'zip', 'hidemobile' );
 		}
 		if ( $this->show['usage'] ) {
-			$form .= $this->get_text_input( 'Daily Average kWh' );
+			$form .= $this->get_text_input( 'Daily Ave kWh' );
 		} else {
-			$form .= sprintf( '  <input type="hidden" name="dailyaveragekwh" value="">' . PHP_EOL );
+			$form .= sprintf( '  <input type="hidden" name="dailyavekwh" value="">' . PHP_EOL );
 		}
 		$form .= '  </fieldset>' . PHP_EOL;
 

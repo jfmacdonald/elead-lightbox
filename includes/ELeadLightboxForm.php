@@ -66,11 +66,11 @@ class ELeadLightboxForm {
 		return $this->formid;
 	}
 
-	private function get_text_input( $placeholder, $required = false, $minlength = 2, $maxlength = 100 ) {
+	private function get_text_input( $placeholder, $fieldname='', $required = false, $minlength = 2, $maxlength = 100 ) {
 		self::$fieldn ++;
 		$id          = sprintf( '%s-input-%d', $this->formid, self::$fieldn );
 		$placeholder = strtolower( trim( strip_tags( $placeholder ) ) );
-		$name        = strtolower( preg_replace( '/\W+/', '', $placeholder ) );
+		$name        = $fieldname ? $fieldname : strtolower( preg_replace( '/\W+/', '', $placeholder ) );
 		$required    = $required ? 'required' : '';
 		$html        = sprintf( '  <label for="%s" class="%s">' . PHP_EOL, $id, self::PREFIX . '__input' );
 		$html .= sprintf( '    <input type="text" id="%s" name="%s" minlength="%d" maxlength="%d" %s placeholder="%s">',
@@ -85,8 +85,9 @@ class ELeadLightboxForm {
 		self::$fieldn ++;
 		$id          = sprintf( '%s-checkbox-%d', $this->formid, self::$fieldn );
 		$description = trim( strip_tags( $description ) );
+		$parts       = preg_split('/\-/', $name);
 		$html        = sprintf( '  <label for="%s" class="%s">', $id, self::PREFIX . '__checkbox' );
-		$html .= sprintf( '<input type="checkbox" id="%s" name="%s" value="0">', $id, $name );
+		$html .= sprintf( '<input type="checkbox" id="%s" name="%s" value="%s">', $id, $name, end($parts) );
 		$html .= sprintf( ' %s </label>' . PHP_EOL, $description );
 
 		return $html;
@@ -95,9 +96,10 @@ class ELeadLightboxForm {
 	private function get_submit_button() {
 		self::$fieldn ++;
 		$id   = sprintf( '%s-input-%d', $this->formid, self::$fieldn );
-		$html = sprintf( '  <label for="%s" class="%s">' . PHP_EOL, $id, self::PREFIX . '__submit' );
-		$html .= sprintf( '    <input id="%s" type="submit" name="submit" value="%s">' . PHP_EOL, $id, $this->cta );
-		$html .= '  </label>' . PHP_EOL;
+		$html = sprintf( '  <div class="%s">' . PHP_EOL, self::PREFIX . '__submit' );
+		$html .= sprintf( '    <button id="%s" type="submit" name="submit">%s <i class="fa fa-spin"></i></button>' . PHP_EOL,
+			$id, $this->cta );
+		$html .= '</div>' . PHP_EOL;
 
 		return $html;
 	}
@@ -108,9 +110,9 @@ class ELeadLightboxForm {
 
 		$html = <<<EOM
 		<div class="{$class}">
-		<p>One of our team members will be in touch shortly to schedule a free, no-pressure in-home consultation so we can provide you with more information and an exact quote.</p>
-	
-		<p>Thank you for contacting RC Energy Solutions about your home energy needs. We look forward to working with you!</p>
+		<p>Thank you for contacting RC Energy Solutions about your home energy needs.</p>
+		<p>One of our team members will be in touch shortly to schedule a free, no-pressure, in-home consultation so we can provide you with more information and an exact quote.</p>
+		<p>We look forward to working with you!</p>
 		</div>
 		
 EOM;
@@ -137,6 +139,8 @@ EOM;
 		// hidden input
 		$form .= sprintf( '  <input type="hidden" name="sourcetype" value="%s">' . PHP_EOL, 'Website' );
 		$form .= sprintf( '  <input type="hidden" name="source" value="%s">' . PHP_EOL, 'eLead Form' );
+		$form .= sprintf( '  <input type="hidden" name="i360__Components__c" id="components-%s" value="">'. PHP_EOL, $this->formid);
+		$form .= sprintf( '  <input type="hidden" name="i360__Interests__c" id="interests-%s" value="">'. PHP_EOL, $this->formid);
 
 		// $form .= sprintf( '  <input type="hidden" name="retURL" value="%s">' . PHP_EOL, $url );
 
@@ -144,14 +148,15 @@ EOM;
 		$form .= $this->get_text_input( 'First Name' );
 		$form .= $this->get_text_input( 'Last Name', $required = false );
 		$form .= $this->get_text_input( 'Email', $required = false );
-		$form .= $this->get_text_input( 'Phone Number' );
+		$form .= $this->get_text_input( 'Phone', 'phone1' );
 		if ( $show_address ) {
 			$form .= $this->get_text_input( 'Street Address' );
 		}
 		if ( $hide_zipcode ) {
-			$form .= sprintf( '  <input type="hidden" name="zipcode" value="">' . PHP_EOL );
+			$form .= sprintf( '  <input type="hidden" name="zip" value="">' . PHP_EOL );
+			$form .= sprintf( '  <input type="hidden" name="city" value="">' . PHP_EOL );
 		} else {
-			$form .= $this->get_text_input( 'Zipcode' );
+			$form .= $this->get_text_input( 'Zipcode', 'zip' );
 		}
 		$form .= '  </fieldset>' . PHP_EOL;
 
