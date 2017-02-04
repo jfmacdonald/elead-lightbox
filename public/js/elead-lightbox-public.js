@@ -964,7 +964,12 @@ if (typeof module !== 'undefined' && module.exports) {
         var $modal = $('.elead-lightbox-modal');
         if ($modal.length) {
             $modal.find('.elead-lightbox-modal__close').on('click', function (e) {
-                $(this).closest('.elead-lightbox-modal').css('display', 'none');
+                var $thisModal = $(this).closest('.elead-lightbox-modal');
+                $thisModal.css('display', 'none');
+                var $spinner = $thisModal.find('.fa-spinner');
+                if ($spinner.length) $spinner.removeClass('fa-spinner');
+                var $hideafter = $thisModal.find('.hideafter');
+                if ($hideafter.length) $hideafter.removeClass('hideafter');
             });
         }
     }
@@ -1035,7 +1040,12 @@ if (typeof module !== 'undefined' && module.exports) {
         var $modal = $('.elead-lightbox-modal');
         if ($modal.length) {
             $modal.find('.elead-lightbox-modal__close').on('click', function (e) {
-                $(this).closest('.elead-lightbox-modal').css('display', 'none');
+                var $m = $(this).closest('.elead-lightbox-modal');
+                $m.css('display', 'none');
+                var $spinner = $m.find('.fa-spinner');
+                if ($spinner.length) $spinner.removeClass('fa-spinner');
+                var $hideafter = $m.find('.hideafter');
+                if ($hideafter.length) $hideafter.removeClass('hideafter');
                 $('.elead-lightbox-qqform__target').off('load');
                 $('.elead-lightbox-qqform').css({ display: 'block' });
                 $('.elead-lightbox-qqform-response').css({ display: 'none', position: 'absolute' });
@@ -1072,6 +1082,8 @@ if (typeof module !== 'undefined' && module.exports) {
             validators[i].setMessage('valid_zipcode', 'Please enter a valid zip code.');
             validators[i].setMessage('valid_phone', 'Please enter a valid phone number.');
             $(this).submit(function (e) {
+                // form validated?
+                if (e.isDefaultPrevented()) return false;
                 // spinner
                 var $button = $form.find('.elead-lightbox-form__submit button');
                 var $icon = $form.find('.elead-lightbox-form__submit i');
@@ -1151,6 +1163,8 @@ if (typeof module !== 'undefined' && module.exports) {
             validators[i].setMessage('valid_decimal', 'Please enter a positive number.');
             // handle submit
             $(this).submit(function (e) {
+                // form validated?
+                if (e.isDefaultPrevented()) return false;
                 // spinner
                 var $button = $form.find('.elead-lightbox-qqform__submit button');
                 var $icon = $form.find('.elead-lightbox-qqform__submit i');
