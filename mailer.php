@@ -16,6 +16,7 @@ class ELeadLightboxMailer {
 	public $maxcost = 5.0;
 	public $replyto = '"RC Energy Solutions" <contact@rcenergysolutions.com>';
 	public $provider = '"RC Energy Solutions" <contact@rcenergysolutions.com>';
+	public $bcc = '"RC Energy Solutions" <contact@rcenergysolutions.com>';
 	private $email = '';
 	private $size = 0;
 	private $input = array(
@@ -147,6 +148,7 @@ EOM;
 		$subject = "Your solar estimate";
 		$header  = "From: {$this->provider}\r\n";
 		$header .= "Reply-To: {$this->replyto}\r\n";
+		$header .= "Bcc: {$this->bcc}\r\n";
 
 		$message = $this->get_message();
 		$this->debug( "MESSAGE: " . $message );

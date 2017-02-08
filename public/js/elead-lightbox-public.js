@@ -614,7 +614,7 @@ if (typeof module !== 'undefined' && module.exports) {
 (function ($) {
     'use strict';
 
-    var geocode = 'http://maps.googleapis.com/maps/api/geocode/json?address=';
+    var geocode = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
 
     var zipCity = {
         91901: 'Alpine',
