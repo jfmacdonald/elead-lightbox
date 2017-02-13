@@ -806,7 +806,7 @@ if (typeof module !== 'undefined' && module.exports) {
     function system_size(dailyKiloWattHrs) {
         var hrsSun = 5;
         var kWsolar = 1150;
-        return Math.round(kWsolar * (dailyKiloWattHrs / hrsSun) / 100) / 10;
+        return Number(Math.round(kWsolar * (dailyKiloWattHrs / hrsSun) / 100) / 10).toFixed(1);
     }
 
     function titleCase(str) {
@@ -979,7 +979,7 @@ if (typeof module !== 'undefined' && module.exports) {
         var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
             var $size = $form.find('.elead-lightbox-qqform__systemsize');
-            $size.text(value + ' kWh');
+            $size.text(value + ' kW');
             var $fillme = $form.find('input[name="dailyavekwh"]');
             if ($fillme.length) {
                 $fillme.val(value);
