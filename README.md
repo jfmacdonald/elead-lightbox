@@ -1,4 +1,4 @@
-# WordPress plugin eLead Lightbox
+# WordPress plugin *eLead Lightbox*
 
 Plugin developed by [John Farrell MacDonald](https://jfmacdonald.com) for [RC Energy Solutions](https://rcenergysolutions.com),
 a client of [DataLink SEO](http://datalinkseo.com).
@@ -17,17 +17,13 @@ https://rcenergysolutions.com/solar-panels-san-diego/, sends an email to the cus
 
 ## Short codes
 
-Shortcodes entered in a text field (such as [elead-lightbox-form]) are replaced with HTML in rendered page when the plugin is activated.
+Shortcodes entered in a text field are replaced with HTML in rendered page when the plugin is activated.
 
-<dl>
-<dt> elead-lightbox-form </dt>
-<dd> Embed code for form.</dd>
-<dt> elead-lightbox-cta </dt>
-<dd> Embed call-to-action button with zip code input. Activation opens form in modal. Submission sends info to CRM. </dd>
-<dt> elead-lightbox-instant-quote </dt>
-<dd> Embed call-to-action with input for customer's average daily kWh. Activation calculates solar system size and 
-    opens form in a modal. Form submission sends info to CRM and email to customer with their instant quote. </dd>
-</dl>
+`[elead-lightbox-cta]` embeds call-to-action button with zip code input. Activation opens form in modal. Submission sends info to CRM. 
+
+`[elead-lightbox-instant-quote ]` embeds call-to-action with input for customer's average daily kWh. Activation calculates solar system size and opens form in a modal. Form submission sends info to CRM and email to customer with their instant quote. 
+
+`[elead-lightbox-form]` embeds form for direct dispplay. Form submission sends info to CRM. 
 
 ## ImproveIt360 CRM Interface
 
@@ -48,6 +44,7 @@ $ npm install
 $ bower install
 $ gulp
 ```
+
 Activate plugin and insert shortcodes where needed. 
 
 
