@@ -1,87 +1,46 @@
-# WordPress Plugin Boilerplate #
+# WordPress plugin eLead Lightbox
 
-This is a basic bootstrap to develop WordPress plugins using **Grunt**, **Compass**, **GIT** and **SVN**.  
-You will use your GIT repository as plugin development environment and the WordPress plugin repository as production environment.  
-Being possible to run commands with the Grunt to deploy its new versions.
+Plugin developed by [John Farrell MacDonald](https://jfmacdonald.com) for [RC Energy Solutions](https://rcenergysolutions.com),
+a client of [DataLink SEO](http://datalinkseo.com).
 
-This project was made based on [WordPress-Plugin-Boilerplate by tommcfarlin](https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate).
+The plugin provides forms for a person interested in RC Energy services to provide information, which is sent to 
+an [ImproveIt360](https://www.improveit360.com/) customer relationship management (CRM) system based on the Salesforce
+[Force.com](https://www.salesforce.com/products/platform/products/force/) platform.
 
-## Requirements: ##
+- Base form.
+- A call-to-action button with an embedded form for zip code that brings up the base form in a modal (lightbox)
+- A call-to-action button with an embedded form for daily average kWh that calculates solar system size and brings
+  up a form in a modal
+  
+The first two items are in play on the RC Energy home page, https://rcenergysolutions.com. The later, on a services page,
+https://rcenergysolutions.com/solar-panels-san-diego/, sends an email to the customer and the information to the CRM.
 
-* [Node.js](http://nodejs.org/)
-* [Compass](http://compass-style.org/)
-* [GIT](http://git-scm.com/)
-* [Subversion](http://subversion.apache.org/)
+## Short codes
 
-## Installation: ##
+Shortcodes entered in a text field (such as [elead-lightbox-form]) are replaced with HTML in rendered page when the plugin is activated.
 
-Clone this repo:
+<dl>
+<dt> elead-lightbox-form </dt>
+<dd> Embed code for form.</dd>
+<dt> elead-lightbox-cta </dt>
+<dd> Embed call-to-action button with zip code input. Activation opens form in modal. Submission sends info to CRM. </dd>
+<dt> elead-lightbox-instant-quote </dt>
+<dd> Embed call-to-action with input for customer's average daily kWh. Activation calculates solar system size and 
+    opens form in a modal. Form submission sends info to CRM and email to customer with their instant quote. </dd>
+</dl>
+
+
+## Installation
 
 ```bash
-$ git clone git@github.com:claudiosmweb/wordpress-plugin-bootstrap.git
-```
 
-Install the dependencies of the grunt:
-
-```bash
+$ cd <wordpress-install-dir>/wp-content/plugins
+$ git clone git@bitbucket.org:jfmacdonald/elead-lightbox.git && cd elead-lightbox
 $ npm install
+$ bower install
+$ gulp
+
+Activate plugin and insert shortcodes where needed. 
+
 ```
 
-Finally rename the files as you want and create your GIT repository.
-
-## Commands: ##
-
-Lint, compile and compress the files:
-
-```bash
-$ grunt
-```
-
-Watch the project:
-
-```bash
-$ grunt watch
-```
-
-Deploy with svn:
-
-```bash
-$ grunt deploy
-```
-
-## Changelog ##
-
-##### 3.0.0 #####
-
-* Updated the dependencies.
-* Fixed the assets directories based on [WordPress-Plugin-Boilerplate by tommcfarlin](https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate).
-* Improved the grunt tasks.
-* Added .jshintrc with WordPress standards.
-* Fixed the `indent_style` to `tab` in .editorconfig file.
-
-##### 2.1.0 #####
-
-* Updated the grunt tasks.
-* Improved the rsync tasks.
-
-##### 2.0.0 #####
-
-* Updated the grunt tasks.
-* Added .editorconfig.
-* Added .jshintrc.
-* Removed config.rb in favor to grunt compass task.
-* Improved the code.
-
-##### 1.0.0 #####
-
-* Initial version.
-
-## License: ##
-
-WordPress Plugin Boilerplate is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published
-by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-WordPress Plugin Boilerplate is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-Get a copy of the GNU General Public License in <http://www.gnu.org/licenses/>.
