@@ -3,7 +3,7 @@
  * (c) 2017 John Farrell MacDonald <john@jfmacdonald.com>
  */
 
-namespace eEleadLightbox;
+namespace eLeadLightbox;
 
 /**
  * @since      1.1.0
