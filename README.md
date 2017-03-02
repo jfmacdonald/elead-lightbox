@@ -4,7 +4,7 @@ Plugin developed by [John Farrell MacDonald](https://jfmacdonald.com) for [RC En
 a client of [DataLink SEO](http://datalinkseo.com).
 
 The plugin provides forms for a person interested in RC Energy services to provide information, which is sent to 
-an [ImproveIt360](https://www.improveit360.com/) customer relationship management (CRM) system based on the Salesforce
+an [ImproveIt 360](https://www.improveit360.com/) customer relationship management (CRM) system based on the Salesforce
 [Force.com](https://www.salesforce.com/products/platform/products/force/) platform.
 
 - Base form.
@@ -29,18 +29,26 @@ Shortcodes entered in a text field (such as [elead-lightbox-form]) are replaced 
     opens form in a modal. Form submission sends info to CRM and email to customer with their instant quote. </dd>
 </dl>
 
+## ImproveIt360 CRM Interface
+
+See the [ImproveIt 360 developer docs](http://developers.improveit360.com/) for information on the CRM interface. This 
+plugin uses the [Web-to-eLead interface](http://developers.improveit360.com/i360-web-to-lead).
+
+Testing&mdash;except for integration with the CRM, which requires access to the CRM account&mdash;can be done with 
+form submission to the 
+[test endpoint]()https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8)
+by setting $test to true in the elead-lightbox.php.
 
 ## Installation
 
 ```bash
-
 $ cd <wordpress-install-dir>/wp-content/plugins
 $ git clone git@bitbucket.org:jfmacdonald/elead-lightbox.git && cd elead-lightbox
 $ npm install
 $ bower install
 $ gulp
-
+```
 Activate plugin and insert shortcodes where needed. 
 
-```
+
 
