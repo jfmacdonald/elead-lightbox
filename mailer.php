@@ -199,8 +199,10 @@ EOM;
 
 
         if ($this->wp) {
+            $this->debug("MAILER: wp_mail" . PHP_EOL);
             $this->response['sent'] = wp_mail( $address, $subject, $message, $header);
         } else {
+            $this->debug("MAILER: mail" . PHP_EOL);
             $this->response['sent'] = mail( $address, $subject, $message, $header);
         }
 
@@ -216,8 +218,6 @@ EOM;
     }
 
 }
-
-load_wordpress();
 
 $mailer = new ELeadLightboxMailer();
 

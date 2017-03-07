@@ -138,7 +138,7 @@ EOM;
 		$form .= sprintf( '  <input type="hidden" name="source" value="%s">' . PHP_EOL, 'eLead Form' );
 		$form .= sprintf( '  <input type="hidden" name="i360__Components__c" id="components-%s" value="Solar">'. PHP_EOL, $this->formid);
 		$form .= sprintf( '  <input type="hidden" name="i360__Interests__c" id="interests-%s" value="Solar">'. PHP_EOL, $this->formid);
-        $form .= sprintf( '  <input type="hidden" name="wppath" value="%s">' . PHP_EOL, \get_home_path() );
+        $form .= sprintf( '  <input type="hidden" name="wppath" value="%s">' . PHP_EOL, ABSPATH );
 
 		// $form .= sprintf( '  <input type="hidden" name="retURL" value="%s">' . PHP_EOL, $url );
 
