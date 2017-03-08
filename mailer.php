@@ -16,9 +16,9 @@ class ELeadLightboxMailer
 
     public $mincost = 3.35;
     public $maxcost = 5.0;
-    public $replyto = '"RC Energy Solutions" <contact@rcenergysolutions.com>';
-    public $provider = '"RC Energy Solutions" <contact@rcenergysolutions.com>';
-    public $bcc = '"RC Energy Solutions" <contact@rcenergysolutions.com>';
+    public $replyto = 'contact@rcenergysolutions.com';
+    public $provider = 'contact@rcenergysolutions.com';
+    public $bcc = 'contact@rcenergysolutions.com';
     private $wp = '';
     private $email = '';
     private $size = 0;
