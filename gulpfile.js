@@ -5,8 +5,8 @@ var plugin = 'elead-lightbox';
 var publik = './public/';
 
 var vendorScripts = [
-    // Validate.js
-    // 'vendor/validatejs/validate.js'
+    // 'vendor/jquery_appear/jquery.appear.js',
+    'vendor/waypoints/lib/jquery.waypoints.js'
 ];
 
 var appScripts = [

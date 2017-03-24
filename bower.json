@@ -11,7 +11,8 @@
     "validatejs": "^1.5.1",
     "bourbon": "^4.2.7",
     "susy": "^2.2.12",
-    "waypoints": "^4.0.1"
+    "waypoints": "^4.0.1",
+    "jquery_appear": "^0.3.6"
   },
   "ignore": [
     "**/.*",

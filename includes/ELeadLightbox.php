@@ -61,9 +61,10 @@ class ELeadLightbox {
 
 		$this->load_dependencies();
 		$this->set_locale();
-		$this->register_admin_hooks();
-		$this->register_public_hooks();
+		// $this->register_admin_hooks();
+		// $this->register_public_hooks();
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_public_hooks' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_hooks' ) );
 		add_action( 'init', array( $this, 'register_shortcodes' ) );
 	}
 
@@ -108,7 +109,7 @@ class ELeadLightbox {
 	 *
 	 * @access   private
 	 */
-	private function register_admin_hooks() {
+	function register_admin_hooks() {
 
 	}
 
@@ -127,7 +128,9 @@ class ELeadLightbox {
 			array( 'jquery' ), '', true );
 		wp_enqueue_script( $this->script_handle );
 		wp_localize_script( $this->script_handle, 'eLeadLightbox', array(
-			'mailer_url' => $plugin_dir . '/mailer.php'
+			'wp_path' => ABSPATH,
+			'mailer_url' => $plugin_dir . '/mailer.php',
+			'analyzer_url' => $plugin_dir . '/analyzer.php'
 		) );
 	}
 

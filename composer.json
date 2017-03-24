@@ -1,0 +1,6 @@
+{
+    "require": {
+        "jaybizzle/crawler-detect": "1.*",
+        "geoip2/geoip2": "^2.4"
+    }
+}

@@ -252,8 +252,9 @@
             if ($zipinput.length) {
                 $zipinput.val(zipcode);
             }
+            $modal.css('display', 'table');
+            update_db($form, 'view');
         }
-        $modal.css('display', 'table');
     }
 
     function clear_error($errors) {
@@ -268,9 +269,9 @@
         $error.css({display: 'block', opacity: '1'});
     }
 
-    function process_cta($cta, $modal) {
-        var $input = $cta.find('.elead-lightbox-cta__input');
-        var $error = $cta.find('.elead-lightbox-cta__error');
+    function process_cta($form, $modal) {
+        var $input = $form.find('.elead-lightbox-cta__input');
+        var $error = $form.find('.elead-lightbox-cta__error');
         clear_error($error);
 
         var entry = $input.length ? $input.val() : '';
@@ -287,6 +288,7 @@
         var city = '';
         if (zipCity[zipcode]) {
             city = zipCity[zipcode];
+            update_db($form,'submit');
             display_form_modal(zipcode, city, $modal);
             return;
         }
@@ -304,6 +306,7 @@
                 if (json.results) {
                     city = get_city_from_json(zipcode, json.results);
                     if (city) {
+                        update_db($form,'submit');
                         display_form_modal(zipcode, city, $modal);
                     } else {
                         display_error($error, 'Please enter a valid zip code');
@@ -324,7 +327,7 @@
         xhr.send(null);
     }
 
-    function handle_cta($) {
+    function handle_cta() {
         var $cta = $('.elead-lightbox-cta__button');
         var $error = $('.elead-lightbox-cta__error');
         if ($cta.length) {
@@ -360,16 +363,15 @@
                 var $thisModal = $(this).closest('.elead-lightbox-modal');
                 $thisModal.css('display', 'none');
                 var $spinner = $thisModal.find('.fa-spinner');
-                if ( $spinner.length ) $spinner.removeClass('fa-spinner');
+                if ($spinner.length) $spinner.removeClass('fa-spinner');
                 var $hideafter = $thisModal.find('.hideafter');
-                if ( $hideafter.length ) $hideafter.removeClass('hideafter');
+                if ($hideafter.length) $hideafter.removeClass('hideafter');
             });
         }
     }
 
     function display_qqform_modal(value, $modal) {
         var $form = $modal.find('.elead-lightbox-qqform');
-        var $header = $modal.find('.elead-lightbox-modal__header');
         if ($form.length) {
             var $size = $form.find('.elead-lightbox-qqform__systemsize');
             $size.text(value + ' kW');
@@ -377,13 +379,14 @@
             if ($fillme.length) {
                 $fillme.val(value);
             }
+            $modal.css('display', 'table');
+            update_db($form, 'view');
         }
-        $modal.css('display', 'table');
     }
 
-    function process_qquote($cta, $modal) {
-        var $input = $cta.find('.elead-lightbox-qquote__input');
-        var $error = $cta.find('.elead-lightbox-qquote__error');
+    function process_qquote($form, $modal) {
+        var $input = $form.find('.elead-lightbox-qquote__input');
+        var $error = $form.find('.elead-lightbox-qquote__error');
         clear_error($error);
 
         var entry = $input.length ? $input.val().trim() : '';
@@ -397,10 +400,11 @@
             return;
         }
         var value = system_size(match[1]);
+        update_db($form,'submit');
         display_qqform_modal(value, $modal);
     }
 
-    function handle_qquote($) {
+    function handle_qquote() {
         var $cta = $('.elead-lightbox-qquote__button');
         var $error = $('.elead-lightbox-qquote__error');
         if ($cta.length) {
@@ -436,9 +440,9 @@
                 var $m = $(this).closest('.elead-lightbox-modal');
                 $m.css('display', 'none');
                 var $spinner = $m.find('.fa-spinner');
-                if ( $spinner.length ) $spinner.removeClass('fa-spinner');
+                if ($spinner.length) $spinner.removeClass('fa-spinner');
                 var $hideafter = $m.find('.hideafter');
-                if ( $hideafter.length ) $hideafter.removeClass('hideafter');
+                if ($hideafter.length) $hideafter.removeClass('hideafter');
                 $('.elead-lightbox-qqform__target').off('load');
                 $('.elead-lightbox-qqform').css({display: 'block'});
                 $('.elead-lightbox-qqform-response').css({display: 'none', position: 'absolute'});
@@ -449,7 +453,7 @@
         }
     }
 
-    function handle_form($) {
+    function handle_form() {
         var validators = [];
         $('.elead-lightbox-form').each(function (i) {
                 var $form = $(this);
@@ -480,7 +484,7 @@
                 validators[i].setMessage('valid_phone', 'Please enter a valid phone number.');
                 $(this).submit(function (e) {
                     // form validated?
-                    if ( e.isDefaultPrevented() ) return false;
+                    if (e.isDefaultPrevented()) return false;
                     // spinner
                     var $button = $form.find('.elead-lightbox-form__submit button');
                     var $icon = $form.find('.elead-lightbox-form__submit i');
@@ -526,7 +530,7 @@
         });
     }
 
-    function handle_qqform($) {
+    function handle_qqform() {
         // eLeadLightbox must be created by wp_localize_script
         if (typeof eLeadLightbox === 'undefined' || !(eLeadLightbox instanceof Object )) return;
         var mailer_url = eLeadLightbox.mailer_url;
@@ -567,7 +571,7 @@
             // handle submit
             $(this).submit(function (e) {
                 // form validated?
-                if ( e.isDefaultPrevented() ) return false;
+                if (e.isDefaultPrevented()) return false;
                 // spinner
                 var $button = $form.find('.elead-lightbox-qqform__submit button');
                 var $icon = $form.find('.elead-lightbox-qqform__submit i');
@@ -613,14 +617,130 @@
         });
     }
 
+    function set_store($form, value) {
+        var form = document.location.pathname + '#' + $form.attr('id');
+        var data = JSON.parse(sessionStorage.getItem('elead-lightbox'));
+        if (!data) {
+            data = {};
+        }
+        data[form] = value;
+        sessionStorage.setItem('elead-lightbox', JSON.stringify(data));
+    }
+
+    function get_store($form) {
+        var form = document.location.pathname + '#' + $form.attr('id');
+        var data = JSON.parse(sessionStorage.getItem('elead-lightbox'));
+        if (!data) return null;
+        if (!data[form]) return null;
+        return data[form];
+    }
+
+    // determine if the site visitor is worth gathering analytics
+    function maybe_enable_analytics() {
+        var endpoint = 'http://ipinfo.io/json';
+        $.get(endpoint, function (response) {
+            if (response.region === 'California') enable_analytics();
+        }, 'json');
+    }
+
+    function update_db($form, action) {
+
+        // done this before?
+        var level = 0;
+        switch (action) {
+            case 'view':
+                level = 1;
+                break;
+            case 'focus':
+                level = 2;
+                break;
+            case 'submit':
+                level = 3;
+        }
+        var status = get_store($form) || 0;
+        if (status >= level) return;
+
+        // nope - proceed with update
+        set_store($form, level);
+        var id = $form.attr('id') || '';
+        var cls = $form.attr('class') || '';
+        var modal = 0;
+        var parentClass = $form.parent().attr('class');
+        if (parentClass && parentClass.search(/elead-lightbox-modal/) > -1) {
+            modal = 1;
+        }
+        // ajax to store view in db
+        $.ajax({
+            url: eLeadLightbox.analyzer_url,
+            method: 'POST',
+            data: {
+                action: action,
+                id: id,
+                class: cls,
+                route: document.location.pathname,
+                modal: modal,
+                wppath: eLeadLightbox.wp_path
+            }
+        });
+    }
+
+    function enable_analytics() {
+
+        // eLeadLightbox must be created by wp_localize_script
+        if (typeof eLeadLightbox === 'undefined' || !(eLeadLightbox instanceof Object )) return;
+
+        // collect visible plugin forms
+        var $forms = $('.elead-lightbox-cta')
+            .add('.elead-lightbox-qquote')
+            .add('.elead-lightbox-form')
+            .add('.elead-lightbox-qqform');
+        var $visible = $forms
+            .not('.elead-lightbox-modal .elead-lightbox-form')
+            .not('.elead-lightbox-modal .elead-lightbox-qqform');
+
+        // view
+        $visible.each(function () {
+            var element = this;
+            var $form = $(this);
+            var waypoint = new Waypoint({
+                element: element,
+                handler: function () {
+                    update_db($form, 'view');
+                },
+                offset: '60%',
+                continuous: true
+            });
+        });
+
+        // focus
+        $forms.each(function () {
+            var $form = $(this);
+            $(this).find('input[type="text"]')
+                .on('focus', function () {
+                    update_db($form, 'focus');
+                });
+        });
+
+        // submit -- no such event for CTA forms!
+        $forms.each(function () {
+            $(this).on('submit', function (e) {
+                // form validated?
+                if (e.isDefaultPrevented()) return false;
+                // OK
+                var $form = $(this);
+                update_db($form, 'submit');
+            });
+        });
+    }
+
     $(function () {
-        handle_cta($);
-        handle_form($);
+        handle_cta();
+        handle_form();
         if (typeof eLeadLightbox !== 'undefined') {
-            handle_qquote($);
-            handle_qqform($);
+            handle_qquote();
+            handle_qqform();
+            maybe_enable_analytics();
         }
     });
 
-})
-(jQuery);
+})(jQuery);
