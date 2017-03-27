@@ -21,7 +21,7 @@ class ELeadLightboxCTA {
 		$this->id  = self::PREFIX . '-' . self::$ctan;
 		$this->set_input( $input );
 		if ( $form instanceof ELeadLightboxForm ) {
-			$this->modal = new ELeadLightboxModal( $form->get_form($hide_zipcode=true) );
+			$this->modal = new ELeadLightboxModal( $form->get_html($hide_zipcode=true) );
 		}
 	}
 

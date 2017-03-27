@@ -25,7 +25,7 @@ class ELeadLightboxQuickQuote {
 		$this->tip = $help;
 		$this->set_input( $input );
 		if ( $form instanceof ELeadLightboxQQForm ) {
-			$this->modal = new ELeadLightboxModal( $form->get_form( $show_address = true ) );
+			$this->modal = new ELeadLightboxModal( $form->get_html( $show_address = true ) );
 		}
 	}
 

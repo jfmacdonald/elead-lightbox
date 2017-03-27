@@ -121,7 +121,7 @@ EOM;
 	}
 
 
-	function get_form( $hide_zipcode = false, $show_address = false ) {
+	function get_html( $hide_zipcode = false, $show_address = false ) {
 		if ( ! $this->action ) {
 			return '';
 		}
@@ -180,12 +180,10 @@ EOM;
 		return $form;
 	}
 
-	function get_html() {
-		$html = '';
-
-		$form = $this->get_form();
+	function get_wrapped_html() {
+		$form_html = $this->get_html();
 		if ( $form ) {
-			return sprintf( '  <div class="%s__wrapper">' . PHP_EOL . $form . '  </div>' . PHP_EOL, self::PREFIX );
+			return sprintf( '  <div class="%s__wrapper">' . PHP_EOL . $form_html . '  </div>' . PHP_EOL, self::PREFIX );
 		} else {
 			return '';
 		}

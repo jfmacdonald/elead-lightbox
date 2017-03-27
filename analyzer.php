@@ -50,8 +50,8 @@ class ELeadLightboxAnalyzer {
 		global $wpdb;
 		$this->debug( 'Connecting WP database ' . var_export( $wpdb ) );
 		$this->db             = $wpdb;
-		$this->form_table     = $wpdb->prefix . 'eleadlbox_forms';
-		$this->activity_table = $wpdb->prefix . 'eleadlbox_activity';
+		$this->form_table     = $wpdb->prefix . 'eleadlightbox_forms';
+		$this->activity_table = $wpdb->prefix . 'eleadlightbox_activity';
 	}
 
 	private function find_wordpress_base_path() {

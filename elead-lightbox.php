@@ -12,7 +12,7 @@
  * Plugin Name:       ELead Lightbox
  * Plugin URI:        https://jfmacdonald.com
  * Description:       CTA and form for submitting a quote request to a Force.com CRM.
- * Version:           1.1.5
+ * Version:           1.2.0
  * Author:            John Farrell MacDonald
  * Author URI:        https://jfmacdonald.com
  * Text Domain:       elead-lightbox-locale
@@ -29,25 +29,11 @@ if ( ! defined( 'WPINC' ) ) {
 
 if ( ! class_exists( 'ELeadLightbox' ) ) {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/ELeadLightbox.php';
-	ELeadLightbox::bootstrap();
 }
+register_activation_hook( __FILE__, 'ELeadLightbox::activate');
+ELeadLightbox::bootstrap();
 
-/**
- * The code that runs during plugin activation.
- */
-if ( ! class_exists( 'ELeadLightbox_Activator' ) ) {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/ELeadLightboxActivator.php';
-	register_activation_hook( __FILE__, 'ELeadLightboxActivator::activate' );
-}
-
-/**
- * The code that runs during plugin deactivation.
- */
-if ( ! class_exists( 'ELeadLightbox_Activator' ) ) {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/ELeadLightboxDeactivator.php';
-	register_deactivation_hook( __FILE__, 'ELeadLightboxDeactivator::deactivate' );
-}
-
+/*
 function get_elead_lightbox_form() {
 	$rtn_url = get_permalink( get_page_by_path( 'thank-you' ) );
 	// error_log( sprintf( "rtn_url is %s\n", $rtn_url ), 3, '/var/tmp/php-error.log' );
@@ -114,3 +100,4 @@ function elead_lightbox_shortcode_init() {
 }
 
 add_action( 'init', 'elead_lightbox_shortcode_init' );
+*/

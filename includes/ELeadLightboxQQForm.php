@@ -119,7 +119,7 @@ EOM;
 	}
 
 
-	function get_form() {
+	function get_html() {
 		if ( ! $this->action ) {
 			return '';
 		}
@@ -171,10 +171,10 @@ EOM;
 	}
 
 
-	function get_html() {
+	function get_wrapped_html() {
 		$html = '';
 
-		$form = $this->get_form();
+		$form = $this->get_html();
 		if ( $form ) {
 			return sprintf( '  <div class="%s__wrapper">' . PHP_EOL . $form . '  </div>' . PHP_EOL, self::PREFIX );
 		} else {
