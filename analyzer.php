@@ -8,7 +8,6 @@ namespace eLeadLightbox;
 
 require __DIR__ . '/vendor/autoload.php';
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
-use GeoIp2\Database\Reader;
 
 
 /**
@@ -20,18 +19,20 @@ class ELeadLightboxAnalyzer {
 
 	private $input = array(
 		'action' => '',
-		'id'     => '',
 		'class'  => '',
+		'cta'    => '',
+		'formid' => '',
+		'ip'     => '',
 		'route'  => '',
-		'modal'  => '',
+		'state'  => '',
 		'wppath' => '',
 	);
 	private $debug = true;
 	private $log = '/var/tmp/php_error.log';
 	private $botDetect = null;
-	private $geoDetect = null;
 	private $form_table = '';
 	private $activity_table = '';
+	private $visitor_table = '';
 	private $db;
 
 	function __construct() {
@@ -43,7 +44,6 @@ class ELeadLightboxAnalyzer {
 		}
 		$this->debug( 'Loading WordPress.' );
 		$this->load_wordpress();
-		$this->debug( 'CrawlerDetect' );
 		$this->botDetect = new CrawlerDetect();
 		// $this->debug( 'GeoDetect' );
 		// $this->geoDetect = new Reader( __DIR__ . '/GeoLite2-Country.mmdb' );
@@ -52,6 +52,7 @@ class ELeadLightboxAnalyzer {
 		$this->db             = $wpdb;
 		$this->form_table     = $wpdb->prefix . 'eleadlightbox_forms';
 		$this->activity_table = $wpdb->prefix . 'eleadlightbox_activity';
+		$this->visitor_table  = $wpdb->prefix . 'eleadlightbox_visitor';
 	}
 
 	private function find_wordpress_base_path() {
@@ -93,29 +94,32 @@ class ELeadLightboxAnalyzer {
 	}
 
 	function sanitize( $string ) {
-		return htmlentities(
-			str_replace( array( "\r", "\n" ), array( " ", " " ),
-				strip_tags( $string ) ),
-			ENT_QUOTES );
+		return str_replace( array( "\r", "\n" ), array( " ", " " ),
+			strip_tags( $string ) );
 	}
 
-	function is_bot() {
+	function not_bot() {
 		$bot = $this->botDetect->isCrawler();
 		if ( $bot ) {
 			$this->debug( 'Bots! ' . $this->botDetect->getMatches() );
 		}
 
-		return $bot;
+		return !$bot;
 	}
 
 	function save_activity() {
+		$ip         = $this->input['ip'];
 		$action     = $this->input['action'];
-		$form_id    = $this->input['id'];
+		$form_id    = $this->input['formid'];
 		$form_class = $this->input['class'];
 		$form_route = $this->input['route'];
-		$is_modal   = (int) $this->input['modal'];
+		$form_cta   = $this->input['cta'];
+		$state      = $this->input['state'];
 		$digest     = md5( $form_route . '#' . $form_id );
-		$date       = date( 'Y-m-d' );
+		$tz         = new \DateTimeZone( 'America/Los_Angeles' );
+		$dt         = new \DateTime( 'now', $tz );
+		$dt->setTimestamp( time() );
+		$date = $dt->format( 'Y-m-d' );
 
 		$this->debug( "Saving activity: $action, $form_id, $form_route, $digest, $date" );
 
@@ -134,9 +138,10 @@ class ELeadLightboxAnalyzer {
 				'route'  => $form_route,
 				'formid' => $form_id,
 				'class'  => $form_class,
-				'modal'  => $is_modal
-			), array( '%s', '%s', '%s', '%s', '%d' ) );
+				'cta'    => $form_cta
+			) );
 		}
+
 
 		// activity
 		$activity_table = $this->activity_table;
@@ -172,6 +177,13 @@ class ELeadLightboxAnalyzer {
 					'submit' => $submit
 				),
 				array( '%s', '%s', '%d', '%d', '%d' ) );
+
+			// save visitor state
+			$this->db->replace( $this->visitor_table, array(
+				'ip'    => $ip,
+				'date'  => $date,
+				'state' => $state
+			) );
 		}
 
 		return $saved;
@@ -182,11 +194,8 @@ class ELeadLightboxAnalyzer {
 $analyzer = new ELeadLightboxAnalyzer();
 
 $status = 1;
-
-if ( ! $analyzer->is_bot() ) {
-	if ( $analyzer->save_activity() ) {
-		$status = 0;
-	}
+if ( $analyzer->not_bot() && $analyzer->save_activity() ) {
+	$status = 0;
 }
 
 exit( $status );

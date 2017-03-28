@@ -1,5 +1,9 @@
 <?php
 
+require __DIR__ . '/../vendor/autoload.php';
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
+use GeoIp2\Database\Reader;
+
 /**
  * The core plugin class.
  *
@@ -12,6 +16,7 @@ class ELeadLightbox {
 	const FONTAWESOME = 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css';
 
 	private static $instance;
+	private $visitor_table = '';
 
 	public static function bootstrap() {
 		if ( self::$instance == null ) {
@@ -40,16 +45,16 @@ CREATE TABLE $form_table (
 	route  char(64) NOT NULL,
 	formid char(64) NOT NULL,
 	class  char(64),
-	modal  tinyint DEFAULT 0,
+	cta    char(64),
 	PRIMARY KEY  (digest)
 ) $charset_collate;
 FORM_TABLE;
 		dbDelta( $form_sql );
 
 		// Activity DB table
-		$act_table = $wpdb->prefix . 'eleadlightbox_activity';
-		$act_sql   = <<<ACTIVITY_TABLE
-CREATE TABLE $act_table (
+		$activity_table = $wpdb->prefix . 'eleadlightbox_activity';
+		$act_sql        = <<<ACTIVITY_TABLE
+CREATE TABLE $activity_table (
 	date date NOT NULL,
 	digest char(32) NOT NULL,
 	view int DEFAULT 0,
@@ -60,6 +65,18 @@ CREATE TABLE $act_table (
 ) $charset_collate;
 ACTIVITY_TABLE;
 		dbDelta( $act_sql );
+
+		// Visitor DB table
+		$visitor_table = $wpdb->prefix . 'eleadlightbox_visitor';
+		$visitor_sql   = <<<VISITOR_TABLE
+CREATE TABLE $visitor_table (
+	ip char(40) NOT NULL,
+	date date NOT NULL,
+	state varchar(1024) DEFAULT '{}',
+	PRIMARY KEY  (ip)
+) $charset_collate;
+VISITOR_TABLE;
+		dbDelta( $visitor_sql );
 
 		add_option( 'elead_lightbox_db_version', '1.0' );
 		// error_log( 'elead-lightbox plugin activated' );
@@ -74,8 +91,7 @@ ACTIVITY_TABLE;
 	 * @var     string $style_handle Stylesheet handle for enqueue
 	 * @var     string $script_handle JavaScript handle for enqueue
 	 */
-	protected $plugin_name, $version, $style_handle, $script_handle;
-
+	protected $plugin_name, $version, $style_handle, $script_handle, $botDetect, $geoDetect;
 
 	/**
 	 * @since   0.1.0
@@ -103,17 +119,27 @@ ACTIVITY_TABLE;
 			'Insulation',
 			'Roofing'
 		);
+		$this->debug         = true;
 		$this->test          = true;
 		$this->endpoint      = $this->test ?
 			'https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8' :
 			'https://rcenergysolutions.secure.force.com/services/apexrest/i360/eLead';
 		$this->returnURL     = '';
 
+		$this->botDetect = new CrawlerDetect();
+		$this->geoDetect = new Reader( plugin_dir_path( dirname( __FILE__ ) ) . 'GeoLite2-Country.mmdb' );
+
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->add_actions();
 		$this->register_shortcodes();
 
+	}
+
+	function debug( $string ) {
+		if ( $this->debug ) {
+			error_log( $string );
+		}
 	}
 
 	/**
@@ -128,14 +154,58 @@ ACTIVITY_TABLE;
 		 * internationalization
 		 */
 		$includes = plugin_dir_path( dirname( __FILE__ ) ) . 'includes';
+		require_once( "$includes/ELeadLightboxCalculatorCTA.php" );
+		require_once( "$includes/ELeadLightboxCalculatorForm.php" );
 		require_once( "$includes/ELeadLightboxI18n.php" );
-		require_once( "$includes/ELeadLightboxForm.php" );
 		require_once( "$includes/ELeadLightboxModal.php" );
-		require_once( "$includes/ELeadLightboxCTA.php" );
-		require_once( "$includes/ELeadLightboxQuickQuote.php" );
-		require_once( "$includes/ELeadLightboxQQForm.php" );
+		require_once( "$includes/ELeadLightboxQuoteCTA.php" );
+		require_once( "$includes/ELeadLightboxQuoteForm.php" );
 	}
 
+	private function is_bot() {
+		$bot = $this->botDetect->isCrawler();
+		if ( $bot ) {
+			$this->debug( 'Bots! ' . $this->botDetect->getMatches() );
+		}
+
+		return $bot;
+	}
+
+	private function is_foreign() {
+		$ip      = $this->get_ip();
+		$country = '';
+		try {
+			$record  = $this->geoDetect->country( $ip );
+			$country = $record->country->isoCode();
+		} catch ( Exception $e ) {
+			if ( $this->debug ) {
+				error_log( $e->getMessage() );
+			}
+			$country = 'US';
+		}
+
+		return $country != 'US';
+	}
+
+	private function get_ip() {
+		return $_SERVER['REMOTE_ADDR'];
+	}
+
+	private function get_visitor_state() {
+		global $wpdb;
+		$visitor_table = $wpdb->prefix . 'eleadlightbox_visitor';
+		$query         = $wpdb->prepare( "SELECT * FROM $visitor_table WHERE ip = '%s'",
+			$this->get_ip() );
+		$row           = $wpdb->get_row( $query );
+		if ( $row ) {
+			$state = $row->state;
+			$this->debug( $state );
+		} else {
+			$state = '{}';
+		}
+
+		return $state;
+	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
@@ -195,20 +265,22 @@ ACTIVITY_TABLE;
 			array( 'jquery' ), '', true );
 		wp_enqueue_script( $this->script_handle );
 		wp_localize_script( $this->script_handle, 'eLeadLightbox', array(
-			'is_guest'     => is_user_logged_in() ? 0 : 1,
-			'wp_path'      => ABSPATH,
+			'state'        => $this->get_visitor_state(),
+			'analyzer_url' => $plugin_dir . '/analyzer.php',
+			'ip'           => $this->get_ip(),
+			'is_guest'     => $this->is_bot() || $this->is_foreign() ? 0 : 1,
 			'mailer_url'   => $plugin_dir . '/mailer.php',
-			'analyzer_url' => $plugin_dir . '/analyzer.php'
+			'wp_path'      => ABSPATH,
 		) );
 	}
 
 	public function register_shortcodes() {
 		add_shortcode( 'elead-lightbox-form',
-			array( $this, 'elead_lightbox_form' ) );
+			array( $this, 'elead_lightbox_quote_form' ) );
 		add_shortcode( 'elead-lightbox-cta',
-			array( $this, 'elead_lightbox_cta' ) );
+			array( $this, 'elead_lightbox_quote_cta' ) );
 		add_shortcode( 'elead-lightbox-instant-quote',
-			array( $this, 'elead_lightbox_quickquote' ) );
+			array( $this, 'elead_lightbox_calculator' ) );
 	}
 
 
@@ -246,9 +318,9 @@ ACTIVITY_TABLE;
 		}
 	}
 
-	function get_form() {
+	function get_quote_form() {
 		$rtn_url = get_permalink( get_page_by_path( 'thank-you' ) );
-		$form    = new ELeadLightboxForm();
+		$form    = new ELeadLightboxQuoteForm();
 		$form->set_endpoint( $this->endpoint );
 		$form->set_returnURL( $rtn_url );
 		foreach ( $this->services as $service ) {
@@ -259,8 +331,8 @@ ACTIVITY_TABLE;
 		return $form;
 	}
 
-	function elead_lightbox_form() {
-		$form = $this->get_form();
+	function elead_lightbox_quote_form() {
+		$form = $this->get_quote_form();
 		if ( $form ) {
 			return $form->get_html();
 		} else {
@@ -268,21 +340,21 @@ ACTIVITY_TABLE;
 		}
 	}
 
-	function elead_lightbox_cta() {
-		$form = $this->get_form();
-		$form->set_legend( 'Get a free home-energy consultation in <span class="elead-lightbox-form__city"></span>.' );
-		$cta = new ELeadLightboxCTA( $form );
+	function elead_lightbox_quote_cta() {
+		$form = $this->get_quote_form();
+		$form->set_legend( 'Get a free home-energy consultation in <span class="elead-lightbox-quote-form__city"></span>.' );
+		$cta = new ELeadLightboxQuoteCTA( $form );
 
 		return $cta->get_html();
 	}
 
-	function elead_lightbox_quickquote() {
-		$form = new ELeadLightboxQQForm();
+	function elead_lightbox_calculator() {
+		$form = new ELeadLightboxCalculatorForm();
 		$form->set_endpoint( $this->endpoint );
 		$form->set_legend( '<div>Your solar system size is</div>'
-		                   . '<div class="elead-lightbox-qqform__systemsize"></div>'
+		                   . '<div class="elead-lightbox-cal-form__systemsize"></div>'
 		                   . '<div>Get an instant quote.</div>' );
-		$cta = new ELeadLightboxQuickQuote( $form );
+		$cta = new ELeadLightboxCalculatorCTA( $form );
 
 		return $cta->get_html();
 	}

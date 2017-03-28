@@ -30,8 +30,8 @@ $cta-width: 30rem;
 $cta-height: 4*$cta-font-size;
 $modal-z-index: 999999;
 
-#{$base}-cta,
-#{$base}-qquote {
+#{$base}-quote-cta,
+#{$base}-cal-cta {
   display: table;
   margin: 2rem auto;
 
@@ -143,8 +143,8 @@ $modal-z-index: 999999;
   }
 }
 
-#{$base}-form,
-#{$base}-qqform {
+#{$base}-quote-form,
+#{$base}-cal-form {
   position: relative;
   z-index: auto;
   width: 100%;
@@ -264,10 +264,10 @@ $modal-z-index: 999999;
 
 }
 
-#{$base}-cta,
-#{$base}-qquote,
-#{$base}-form,
-#{$base}-qqform {
+#{$base}-quote-cta,
+#{$base}-cal-cta,
+#{$base}-quote-form,
+#{$base}-cal-form {
 
   &__error {
     background-color: $error-background;
@@ -298,8 +298,8 @@ $modal-z-index: 999999;
   }
 }
 
-#{$base}-form-response,
-#{$base}-qqform-response {
+#{$base}-quote-form-response,
+#{$base}-cal-form-response {
   display: none;
   position: absolute;
   z-index: auto;
@@ -390,8 +390,8 @@ $modal-z-index: 999999;
     margin: 0 12px;
   }
 
-  #{$base}-form,
-  #{$base}-qqform {
+  #{$base}-quote-form,
+  #{$base}-cal-form {
     color: #4c4c4d;
     background-color: transparent;
     padding: 0;
@@ -405,8 +405,8 @@ $modal-z-index: 999999;
 @media screen and (min-width: $medium) {
 
   //$cta-font-size: 1.6rem;
-  #{$base}-cta,
-  #{$base}-qquote {
+  #{$base}-quote-cta,
+  #{$base}-cal-cta {
     &__fieldset {
       font-size: 1.5 * $cta-font-size;
     }
@@ -418,8 +418,8 @@ $modal-z-index: 999999;
     }
   }
 
-  #{$base}-form,
-  #{$base}-qqform {
+  #{$base}-quote-form,
+  #{$base}-cal-form {
     &__legend {
       font-size: 1.2rem;
     }
@@ -431,8 +431,8 @@ $modal-z-index: 999999;
     }
   }
 
-  #{$base}-form-response,
-  #{$base}-qqform-response {
+  #{$base}-quote-form-response,
+  #{$base}-cal-form-response {
     // font-size: 1.5em;
   }
 
@@ -450,8 +450,8 @@ $modal-z-index: 999999;
       // margin-top: 2rem;
       width: $lightbox-width-medium - 24px;
     }
-    #{$base}-qqform,
-    #{$base}-form {
+    #{$base}-cal-form,
+    #{$base}-quote-form {
       &__input {
         width: 50%;
         input[type="text"] {
