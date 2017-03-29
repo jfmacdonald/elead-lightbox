@@ -279,7 +279,7 @@ class ELeadLightboxAnalyzer {
 		$nfocus  = (int) $form->history[ $index ]['focus'];
 		$nsubmit = (int) $form->history[ $index ]['submit'];
 
-		return sprintf( "%d-%d-%d", $nview, $nfocus, $nsubmit );
+		return sprintf( "%d, %d, %d", $nview, $nfocus, $nsubmit );
 
 	}
 
@@ -288,7 +288,7 @@ class ELeadLightboxAnalyzer {
 			die( "get_form_conversion: not an object" );
 		}
 		$cta         = $this->get_form_cta( $form );
-		$target      = $this->get_form_cta( $form );
+		$target      = $this->get_form_target( $form );
 		$view_form   = $cta ? $cta : $form;
 		$submit_form = $target ? $target : $form;
 

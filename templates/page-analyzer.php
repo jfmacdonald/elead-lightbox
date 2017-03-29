@@ -60,7 +60,7 @@ $headings  = array_merge(
 
             <h2 class="elead-lightbox-report__heading">Form Activity</h2>
             <p class="elead-lightbox-report__note">Weekly
-                <em>impressions-focus-events-submissions</em> shown by
+                <em>impressions, focus-events, submissions</em> shown by
                 week-ending date.</p>
             <table class="elead-lightbox-report__table">
                 <thead>
