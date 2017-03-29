@@ -1887,11 +1887,19 @@ if (typeof module !== 'undefined' && module.exports) {
         var id = $form.attr('id') || '';
         var cls = $form.attr('class') || '';
         var cta = '';
+        var target = '';
+        var $modal = undefined;
         var parentClass = $form.parent().attr('class');
         if (parentClass && parentClass.search(/elead-lightbox-modal/) > -1) {
-            var $modal = $form.closest('.elead-lightbox-modal');
+            $modal = $form.closest('.elead-lightbox-modal');
             if ($modal.length) {
                 cta = $modal.prev('form').attr('id') || '';
+            }
+        }
+        if (cls.search(/-cta/)) {
+            $modal = $form.next('.elead-lightbox-modal');
+            if ($modal.length) {
+                target = $modal.find('form').attr('id');
             }
         }
         // session store
@@ -1908,6 +1916,7 @@ if (typeof module !== 'undefined' && module.exports) {
                 ip: eLeadLightbox.ip,
                 route: route,
                 state: sessionData,
+                target: target,
                 wppath: eLeadLightbox.wp_path
             }
         });

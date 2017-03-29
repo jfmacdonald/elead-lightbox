@@ -8,7 +8,7 @@
 
 defined( 'ABSPATH' ) or die( 'Must be included in WordPress.' );
 is_object( $analyzer ) or die( 'No analyzer.' );
-$forms     = $analyzer->get_forms();
+$forms     = $analyzer->get_visible_forms();
 $allforms  = $analyzer->get_all_forms();
 $week_ends = $analyzer->get_week_end_dates();
 $headings  = array_merge(
@@ -75,7 +75,7 @@ $headings  = array_merge(
 							<?php echo $analyzer->get_form_route( $form ); ?>
                         </td>
                         <td>
-							<?php echo $analyzer->get_form_id( $form ); ?>
+							<?php echo $analyzer->get_form_description( $form ); ?>
                         </td>
 						<?php for ( $week = 0; $week < count( $week_ends ); $week ++ ): ?>
                             <td> <?php echo $analyzer->get_form_activity( $form,

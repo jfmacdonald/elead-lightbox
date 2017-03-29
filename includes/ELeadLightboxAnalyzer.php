@@ -23,7 +23,6 @@ class ELeadLightboxAnalyzer {
 	 * @since 1.2.0
 	 */
 	private $dt;
-	private $description;
 	private $forms = array();
 
 	/**
@@ -47,16 +46,10 @@ class ELeadLightboxAnalyzer {
 	 * @since 1.0.0
 	 */
 	function __construct() {
-		$tz                = new \DateTimeZone( 'America/Los_Angeles' );
-		$this->debug       = false;
-		$this->dt          = new \DateTime( '2017-01-01', $tz );
-		$this->forms       = array();
-		$this->description = array(
-			'elead-lightbox-quote-cta'  => 'Zip Code Quote CTA',
-			'elead-lightbox-quote-form' => 'Zip Code Quote Form',
-			'elead-lightbox-cal-cta'    => 'Calculator Quote CTA',
-			'elead-lightbox-cal-form'   => 'Calculator Quote Form'
-		);
+		$tz          = new \DateTimeZone( 'America/Los_Angeles' );
+		$this->debug = false;
+		$this->dt    = new \DateTime( '2017-01-01', $tz );
+		$this->forms = array();
 		$this->add_actions();
 	}
 
@@ -176,10 +169,13 @@ class ELeadLightboxAnalyzer {
 		return $this->forms;
 	}
 
-	function get_forms() {
+	function get_visible_forms() {
 		$forms = array();
 		foreach ( $this->forms as $form ) {
-			if ( preg_match( '/-form/', $form->class ) ) {
+			if ( $form->cta ) {
+				$form = $this->get_form_cta( $form );
+			}
+			if ( ! in_array( $form, $forms ) ) {
 				$forms[] = $form;
 			}
 		}
@@ -203,12 +199,24 @@ class ELeadLightboxAnalyzer {
 
 	function get_form_description( $form ) {
 		$class       = $form->class;
-		$description = $form->formid;
-		if ( array_key_exists( $class, $this->description ) ) {
-			$description = $this->description[ $class ];
-			if ( preg_match( '/-(\d+)/', $form->formid, $matches ) ) {
-				$description .= " " . $matches[1];
-			}
+		$cta         = $form->cta;
+		$target      = $form->target;
+		$description = 'Quote ';
+		if ( preg_match( '/-cal-/', $class ) ) {
+			$description = 'Calculator ';
+		}
+		if ( ( $cta || $target ) && preg_match( '/-quote-/', $class ) ) {
+			$description = 'Zip Code ';
+		}
+		if ( $target ) {
+			$description .= 'Call-to-Action ';
+		} elseif ( $cta ) {
+			$description .= 'Modal Form ';
+		} else {
+			$description .= 'Form ';
+		}
+		if ( preg_match( '/-(\d+)/', $form->formid, $matches ) ) {
+			$description .= $matches[1];
 		}
 
 		return $description;
@@ -252,6 +260,19 @@ class ELeadLightboxAnalyzer {
 		return null;
 	}
 
+	function get_form_target( $form ) {
+		if ( ! $form->target ) {
+			return null;
+		}
+		foreach ( $this->forms as $target ) {
+			if ( $target->formid == $form->target && $target->route == $form->route ) {
+				return $target;
+			}
+		}
+
+		return null;
+	}
+
 	function get_form_activity( $form, $week = null ) {
 		$index   = is_int( $week ) ? $week + 1 : 0;
 		$nview   = (int) $form->history[ $index ]['view'];
@@ -266,13 +287,14 @@ class ELeadLightboxAnalyzer {
 		if ( ! is_object( $form ) ) {
 			die( "get_form_conversion: not an object" );
 		}
-		$submits = $this->get_form_submits( $form, $week );
-		$cta     = $this->get_form_cta( $form );
-		if ( ! $cta ) {
-			$cta = $form;
-		}
-		$views = $this->get_form_views( $cta, $week );
-		$rate  = $views > 0 ? 100 * $submits / floatval( $views ) : 0;
+		$cta         = $this->get_form_cta( $form );
+		$target      = $this->get_form_cta( $form );
+		$view_form   = $cta ? $cta : $form;
+		$submit_form = $target ? $target : $form;
+
+		$submits = $this->get_form_submits( $submit_form, $week );
+		$views   = $this->get_form_views( $view_cta, $week );
+		$rate    = $views > 0 ? 100 * $submits / floatval( $views ) : 0;
 
 		return sprintf(
 			'<span class="elead-lightbox-report__rate">%d%%</span> of %d',

@@ -25,6 +25,7 @@ class ELeadLightboxAnalyzer {
 		'ip'     => '',
 		'route'  => '',
 		'state'  => '',
+		'target' => '',
 		'wppath' => '',
 	);
 	private $debug = true;
@@ -104,22 +105,23 @@ class ELeadLightboxAnalyzer {
 			$this->debug( 'Bots! ' . $this->botDetect->getMatches() );
 		}
 
-		return !$bot;
+		return ! $bot;
 	}
 
 	function save_activity() {
-		$ip         = $this->input['ip'];
-		$action     = $this->input['action'];
-		$form_id    = $this->input['formid'];
-		$form_class = $this->input['class'];
-		$form_route = $this->input['route'];
-		$form_cta   = $this->input['cta'];
-		$state      = $this->input['state'];
-		$tz         = new \DateTimeZone( 'America/Los_Angeles' );
-		$dt         = new \DateTime( 'now', $tz );
+		$ip          = $this->input['ip'];
+		$action      = $this->input['action'];
+		$form_id     = $this->input['formid'];
+		$form_class  = $this->input['class'];
+		$form_route  = $this->input['route'];
+		$form_cta    = $this->input['cta'];
+		$form_target = $this->input['target'];
+		$state       = $this->input['state'];
+		$tz          = new \DateTimeZone( 'America/Los_Angeles' );
+		$dt          = new \DateTime( 'now', $tz );
 		$dt->setTimestamp( time() );
-		$date = $dt->format( 'Y-m-d' );
-		$digest     = md5( $form_route . '#' . $form_id );
+		$date   = $dt->format( 'Y-m-d' );
+		$digest = md5( $form_route . '#' . $form_id );
 
 		$this->debug( "Saving activity: $action, $form_id, $form_route, $digest, $date" );
 
@@ -138,7 +140,8 @@ class ELeadLightboxAnalyzer {
 				'route'  => $form_route,
 				'formid' => $form_id,
 				'class'  => $form_class,
-				'cta'    => $form_cta
+				'cta'    => $form_cta,
+				'target' => $form_target
 			) );
 		}
 

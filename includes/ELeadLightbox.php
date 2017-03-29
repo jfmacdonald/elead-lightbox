@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use GeoIp2\Database\Reader;
 
@@ -46,6 +46,7 @@ CREATE TABLE $form_table (
 	formid char(64) NOT NULL,
 	class  char(64),
 	cta    char(64),
+	target char(64),
 	PRIMARY KEY  (digest)
 ) $charset_collate;
 FORM_TABLE;
