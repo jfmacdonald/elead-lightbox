@@ -61,7 +61,7 @@ CREATE TABLE $activity_table (
 	focus int DEFAULT 0,
 	submit int DEFAULT 0,
 	PRIMARY KEY  (date, digest),
-	FOREIGN KEY  (digest) REFERENCES $form_table(digest)
+	FOREIGN KEY  (digest) REFERENCES $form_table (digest)
 ) $charset_collate;
 ACTIVITY_TABLE;
 		dbDelta( $act_sql );
@@ -175,13 +175,13 @@ VISITOR_TABLE;
 		$country = '';
 		try {
 			$record  = $this->geoDetect->country( $ip );
-			$country = $record->country->isoCode();
+			$country = $record->country->name;
 		} catch ( Exception $e ) {
 			$this->debug( $e->getMessage() );
-			$country = 'US';
+			$country = 'United States';
 		}
 
-		return $country != 'US';
+		return $country != 'United States';
 	}
 
 	private function get_ip() {
@@ -245,7 +245,7 @@ VISITOR_TABLE;
 		$plugin_dir = plugin_dir_url( dirname( __FILE__ ) );
 		wp_register_style( $this->style_handle . '-admin',
 			$plugin_dir . '/admin/css/' . $this->plugin_name . '-admin.css' );
-		wp_enqueue_style( $this->style_handle . '-admin');
+		wp_enqueue_style( $this->style_handle . '-admin' );
 	}
 
 	/**
