@@ -7,68 +7,90 @@
  */
 
 defined( 'ABSPATH' ) or die( 'Must be included in WordPress.' );
-
-// db queries
-global $wpdb;
-$activity_table        = $wpdb->prefix . 'eleadlightbox_activity';
-$forms_table           = $wpdb->prefix . 'eleadlightbox_forms';
-$activity_table_exists = $wpdb->get_var( "SHOW TABLES LIKE '$activity_table'" ) == $activity_table;
-$forms_table_exists    = $wpdb->get_var( "SHOW TABLES LIKE '$forms_table'" ) == $forms_table;
-$digest_query          = "SELECT digest FROM $forms_table ORDER BY formid";
-
-$textdomain = 'elead-lightbox-locale';
-
-$form_type = array(
-	'elead-lightbox-quote-cta'  => 'Zip Code Quote CTA',
-	'elead-lightbox-quote-form' => 'Zip Code Quote Form',
-	'elead-lightbox-cal-cta'    => 'Calculator Quote CTA',
-	'elead-lightbox-cal-form'   => 'Calculator Quote Form'
-)
-
+is_object( $analyzer ) or die( 'No analyzer.' );
+$forms     = $analyzer->get_forms();
+$allforms  = $analyzer->get_all_forms();
+$week_ends = $analyzer->get_week_end_dates();
+$headings  = array_merge(
+	array( 'Page', 'Form' ),
+	$week_ends,
+	array( 'All' )
+);
 ?>
 
 <div class="wrap">
-    <h1 class="elead-lightbox-page__title"><?php _e( 'eLead Lightbox Activity Analyzer',
-			$textdomain ); ?> </h1>
+    <h1><?php echo 'eLead Lightbox Activity Analyzer'; ?> </h1>
     <div>
-		<?php
-		if ( $forms_table_exists ) {
-			$digests = $wpdb->get_col( $digest_query );
-			echo '<h2>Forms</h2>' . PHP_EOL;
-			echo '<table>' . PHP_EOL;
-			echo '<thead>';
-			echo '<th>Form ID</th>';
-			echo '<th>Description</th>';
-			echo '<th>Impressions</th>';
-			echo '<th>Focus Events</th>';
-			echo '<th>Submissions</th>';
-			echo '</thead>';
-			echo '<tbody>' . PHP_EOL;
-			foreach ( $digests as $digest ) {
-				$row      = $wpdb->get_row( $wpdb->prepare(
-					"SELECT * FROM $forms_table WHERE digest = %s",
-					$digest ) );
-				$form     = "{$row->route}#{$row->formid}";
-				$type     = $form_type[ $row->class ];
-				$modal    = $row->cta ? '(modal)' : '';
-				$n_view   = $wpdb->get_var( "SELECT sum(view) FROM $activity_table WHERE digest = '$digest'" );
-				$n_focus  = $wpdb->get_var( "SELECT sum(focus) FROM $activity_table WHERE digest = '$digest'" );
-				$n_submit = $wpdb->get_var( "SELECT sum(submit) FROM $activity_table WHERE digest = '$digest'" );
-				echo '<tr>';
-				echo "<td>{$row->route}#{$row->formid}</td>";
-				echo "<td>{$type} {$modal}</td>";
-				echo "<td>{$n_view}</td>";
-				echo "<td>{$n_focus}</td>";
-				echo "<td>{$n_submit}</td>";
-				echo '</tr>';
-			}
-			echo '</body>' . PHP_EOL;
-			echo '</table>' . PHP_EOL;
+		<?php if ( ! count( $forms ) ): ?>
+            <h2>No eLead-Lightbox forms.</h2>
+		<?php else: ?>
 
-		} else {
-			_e( 'No eLead Lightbox forms found.', $textdomain );
-		} // end if forms_table_exists
-		?>
+            <h2 class="elead-lightbox-report__heading">Conversion Rates</h2>
+            <p class="elead-lightbox-report__note">Weekly
+                <em>impressions (conversion-rate)</em> shown by
+                week-ending date.</p>
+            <table class="elead-lightbox-report__table">
+                <thead>
+				<?php foreach ( $headings as $heading ): ?>
+                    <th><?php echo $heading; ?></th>
+				<?php endforeach; ?>
+                </thead>
+                <tbody>
+				<?php foreach ( $forms as $form ) : ?>
+                    <tr>
+                        <td>
+							<?php echo $analyzer->get_form_route( $form ); ?>
+                        </td>
+                        <td>
+							<?php echo $analyzer->get_form_description( $form ); ?>
+                        </td>
+						<?php for ( $week = 0; $week < count( $week_ends ); $week ++ ): ?>
+                            <td> <?php echo $analyzer->get_form_conversion( $form,
+									$week ); ?>
+                            </td>
+						<?php endfor; ?>
+                        <td>
+							<?php echo $analyzer->get_form_conversion( $form ); ?>
+                        </td>
+                    </tr>
+				<?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <h2 class="elead-lightbox-report__heading">Form Activity</h2>
+            <p class="elead-lightbox-report__note">Weekly
+                <em>impressions-focus-events-submissions</em> shown by
+                week-ending date.</p>
+            <table class="elead-lightbox-report__table">
+                <thead>
+				<?php foreach ( $headings as $heading ): ?>
+                    <th><?php echo $heading; ?></th>
+				<?php endforeach; ?>
+                </thead>
+                <tbody>
+				<?php foreach ( $allforms as $form ) : ?>
+                    <tr>
+                        <td>
+							<?php echo $analyzer->get_form_route( $form ); ?>
+                        </td>
+                        <td>
+							<?php echo $analyzer->get_form_id( $form ); ?>
+                        </td>
+						<?php for ( $week = 0; $week < count( $week_ends ); $week ++ ): ?>
+                            <td> <?php echo $analyzer->get_form_activity( $form,
+									$week ); ?>
+                            </td>
+						<?php endfor; ?>
+                        <td>
+							<?php echo $analyzer->get_form_activity( $form ); ?>
+                        </td>
+                    </tr>
+				<?php endforeach; ?>
+                </tbody>
+            </table>
+
+		<?php endif; // if !count(forms) ?>
+
     </div>
 </div>
 

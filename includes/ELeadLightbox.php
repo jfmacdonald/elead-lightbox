@@ -245,7 +245,10 @@ VISITOR_TABLE;
 	 * @access   private
 	 */
 	function register_admin_hooks() {
-
+		$plugin_dir = plugin_dir_url( dirname( __FILE__ ) );
+		wp_register_style( $this->style_handle . '-admin',
+			$plugin_dir . '/admin/css/' . $this->plugin_name . '-admin.css' );
+		wp_enqueue_style( $this->style_handle . '-admin');
 	}
 
 	/**

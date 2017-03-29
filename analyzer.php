@@ -115,11 +115,11 @@ class ELeadLightboxAnalyzer {
 		$form_route = $this->input['route'];
 		$form_cta   = $this->input['cta'];
 		$state      = $this->input['state'];
-		$digest     = md5( $form_route . '#' . $form_id );
 		$tz         = new \DateTimeZone( 'America/Los_Angeles' );
 		$dt         = new \DateTime( 'now', $tz );
 		$dt->setTimestamp( time() );
 		$date = $dt->format( 'Y-m-d' );
+		$digest     = md5( $form_route . '#' . $form_id );
 
 		$this->debug( "Saving activity: $action, $form_id, $form_route, $digest, $date" );
 

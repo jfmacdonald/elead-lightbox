@@ -665,6 +665,7 @@
 
         // nope - proceed with update
         setStore($form, level);
+        var route = document.location.pathname;
         var id = $form.attr('id') || '';
         var cls = $form.attr('class') || '';
         var cta = '';
@@ -687,7 +688,7 @@
                 cta: cta,
                 formid: id,
                 ip: eLeadLightbox.ip,
-                route: document.location.pathname,
+                route: route,
                 state: sessionData,
                 wppath: eLeadLightbox.wp_path
             }
