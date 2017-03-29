@@ -27,7 +27,7 @@ $headings  = array_merge(
 
             <h2 class="elead-lightbox-report__heading">Conversion Rates</h2>
             <p class="elead-lightbox-report__note">Weekly
-                <em>impressions (conversion-rate)</em> shown by
+                <em>conversion-rate (of impressions)</em> shown by
                 week-ending date.</p>
             <table class="elead-lightbox-report__table">
                 <thead>
@@ -45,7 +45,8 @@ $headings  = array_merge(
 							<?php echo $analyzer->get_form_description( $form ); ?>
                         </td>
 						<?php for ( $week = 0; $week < count( $week_ends ); $week ++ ): ?>
-                            <td> <?php echo $analyzer->get_form_conversion( $form,
+                            <td> <?php
+								echo $analyzer->get_form_conversion( $form,
 									$week ); ?>
                             </td>
 						<?php endfor; ?>

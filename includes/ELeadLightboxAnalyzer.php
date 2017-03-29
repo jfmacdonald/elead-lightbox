@@ -202,14 +202,15 @@ class ELeadLightboxAnalyzer {
 	}
 
 	function get_form_description( $form ) {
-		$class = $form->class;
+		$class       = $form->class;
 		$description = $form->formid;
 		if ( array_key_exists( $class, $this->description ) ) {
 			$description = $this->description[ $class ];
-			if ( preg_match('/-(\d+)/', $form->formid, $matches ) ) {
+			if ( preg_match( '/-(\d+)/', $form->formid, $matches ) ) {
 				$description .= " " . $matches[1];
 			}
 		}
+
 		return $description;
 	}
 
@@ -273,7 +274,9 @@ class ELeadLightboxAnalyzer {
 		$views = $this->get_form_views( $cta, $week );
 		$rate  = $views > 0 ? 100 * $submits / floatval( $views ) : 0;
 
-		return sprintf( "%d (%d%%)", $views, round( $rate ) );
+		return sprintf(
+			'<span class="elead-lightbox-report__rate">%d%%</span> of %d',
+			round( $rate ), intval( $views ) );
 	}
 }
 

@@ -29,6 +29,13 @@ $hover-opacity: 0.58;
   &__note {
     color: #555;
   }
+
+  &__rate {
+    font-size: 1.5em;
+    font-weight: bolder;
+    color: #01B19A;
+  }
+
   &__table {
     th {
       text-align: left;
