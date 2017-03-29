@@ -14,7 +14,7 @@ $week_ends = $analyzer->get_week_end_dates();
 $headings  = array_merge(
 	array( 'Page', 'Form' ),
 	$week_ends,
-	array( 'All' )
+	array( 'All Time' )
 );
 ?>
 
