@@ -1,0 +1,48 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+@import "bourbon";
+@import "susy";
+
+$susy: (
+        global-box-sizing: border-box
+);
+
+$base: ".elead-lightbox";
+
+$medium: 620px;
+$large: 1024px;
+$lightbox-width-small: 300px;
+$lightbox-width-medium: 500px;
+$lightbox-min-height: 300px;
+$field-font-size: 1rem;
+$linkcolor: #f8a13c;
+$errorcolor: #e43b0f;
+$tooltip-background: #686752;
+$error-background: #883f31;
+$emphasis-color: #883f31;
+$tooltip-color: #fff;
+$hover-opacity: 0.58;
+
+#{$base}-report {
+  &__note {
+    color: #555;
+  }
+  &__table {
+    th {
+      text-align: left;
+      font-weight: bolder;
+      padding-left: 2rem;
+    }
+    td {
+      text-align: left;
+      padding-left: 2rem;
+    }
+  }
+}
+
+@media screen and (min-width: $medium) {
+
+}
+

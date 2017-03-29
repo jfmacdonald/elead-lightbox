@@ -19,6 +19,19 @@ var sassPaths = [
     'vendor/susy/sass'
 ];
 
+gulp.task('astyles', function () {
+    return gulp.src('./admin/sass/' + plugin + '-admin.scss')
+        .pipe($.sourcemaps.init())
+        .pipe($.sass({
+            includePaths: sassPaths
+            , outputStyle: 'compressed'
+        }).on('error', $.sass.logError))
+        .pipe($.autoprefixer({
+            browsers: ['last 2 versions', 'ie >= 9']
+        }))
+        .pipe($.sourcemaps.write('.'))
+        .pipe(gulp.dest('./admin/css'));
+});
 gulp.task('pstyles', function () {
     return gulp.src(publik + 'sass/' + plugin + '-public.scss')
         .pipe($.sourcemaps.init())
@@ -53,4 +66,5 @@ gulp.task('watch', function () {
     gulp.watch(appScripts, ['pscripts']);
 });
 
-gulp.task('default', ['pstyles', 'pscripts']);
+gulp.task('default', ['astyles', 'pstyles', 'pscripts']);
+
