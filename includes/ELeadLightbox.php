@@ -1,6 +1,5 @@
 <?php
 
-require dirname(__DIR__) . '/vendor/autoload.php';
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use GeoIp2\Database\Reader;
 

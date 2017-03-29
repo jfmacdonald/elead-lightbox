@@ -293,7 +293,7 @@ class ELeadLightboxAnalyzer {
 		$submit_form = $target ? $target : $form;
 
 		$submits = $this->get_form_submits( $submit_form, $week );
-		$views   = $this->get_form_views( $view_cta, $week );
+		$views   = $this->get_form_views( $view_form, $week );
 		$rate    = $views > 0 ? 100 * $submits / floatval( $views ) : 0;
 
 		return sprintf(

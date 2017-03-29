@@ -27,6 +27,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 if ( ! class_exists( 'ELeadLightbox' ) ) {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/ELeadLightbox.php';
 }
