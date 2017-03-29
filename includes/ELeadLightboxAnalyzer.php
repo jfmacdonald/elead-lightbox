@@ -48,7 +48,7 @@ class ELeadLightboxAnalyzer {
 	 */
 	function __construct() {
 		$tz                = new \DateTimeZone( 'America/Los_Angeles' );
-		$this->debug       = true;
+		$this->debug       = false;
 		$this->dt          = new \DateTime( '2017-01-01', $tz );
 		$this->forms       = array();
 		$this->description = array(
@@ -158,9 +158,6 @@ class ELeadLightboxAnalyzer {
 					$form->history[ $week + 1 ][ $action ] = $this->retrieve_sum( $action,
 						$digest, $week );
 				}
-			}
-			if ( $this->debug ) {
-				// error_log( json_encode($form));
 			}
 			$this->forms[] = $form;
 		}
@@ -273,7 +270,6 @@ class ELeadLightboxAnalyzer {
 		if ( ! $cta ) {
 			$cta = $form;
 		}
-		// error_log( 'cta: ' . print_r( $cta, true ) );
 		$views = $this->get_form_views( $cta, $week );
 		$rate  = $views > 0 ? 100 * $submits / floatval( $views ) : 0;
 

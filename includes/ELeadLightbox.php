@@ -79,7 +79,6 @@ VISITOR_TABLE;
 		dbDelta( $visitor_sql );
 
 		add_option( 'elead_lightbox_db_version', '1.0' );
-		// error_log( 'elead-lightbox plugin activated' );
 	}
 
 
@@ -119,8 +118,8 @@ VISITOR_TABLE;
 			'Insulation',
 			'Roofing'
 		);
-		$this->debug         = true;
-		$this->test          = true;
+		$this->debug         = false;
+		$this->test          = false;
 		$this->endpoint      = $this->test ?
 			'https://dteng-12546a52479-developer-edition.na7.force.com/services/apexrest/i360/eLead?encoding=UTF-8' :
 			'https://rcenergysolutions.secure.force.com/services/apexrest/i360/eLead';
@@ -178,9 +177,7 @@ VISITOR_TABLE;
 			$record  = $this->geoDetect->country( $ip );
 			$country = $record->country->isoCode();
 		} catch ( Exception $e ) {
-			if ( $this->debug ) {
-				error_log( $e->getMessage() );
-			}
+			$this->debug( $e->getMessage() );
 			$country = 'US';
 		}
 
