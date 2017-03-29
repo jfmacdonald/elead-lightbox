@@ -1,6 +1,13 @@
 .DS_Store
 *.log
 .idea
+try.php
 node_modules/
-vendor/
 scratch/
+vendor/bourbon/
+vendor/jquery/
+vendor/jquery_appear/
+vendor/susy/
+vendor/validatejs/
+vendor/waypoints/
+
