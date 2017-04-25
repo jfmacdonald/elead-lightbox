@@ -55,12 +55,12 @@ class ELeadLightboxMailer {
 		}
 		$this->mincost  = 3.35;
 		$this->maxcost  = 5.0;
-		$this->provider = 'RC Energy Solutions <contact@rcenergysolutions.com>';
+		$this->provider = 'contact@rcenergysolutions.com';
 		$this->header   = array(
-			'From:' . $this->provider,
-			'Reply-to:' . $this->provider,
-			'Bcc:' . $this->provider,
-			'Bcc:' . 'Jose Delgado <jose@datalinkseo.com>',
+			'From: ' . $this->provider,
+			'Reply-to: ' . $this->provider,
+			'Bcc: ' . $this->provider,
+			'Bcc: ' . 'jose@datalinkseo.com',
 		);
 		$this->load_wordpress();
 	}

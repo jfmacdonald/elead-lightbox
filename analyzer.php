@@ -28,7 +28,7 @@ class ELeadLightboxAnalyzer {
 		'target' => '',
 		'wppath' => '',
 	);
-	private $debug = true;
+	private $debug = FALSE;
 	private $log = '/var/tmp/php_error.log';
 	private $botDetect = null;
 	private $form_table = '';
