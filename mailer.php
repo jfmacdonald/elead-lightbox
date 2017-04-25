@@ -11,132 +11,131 @@ namespace eLeadLightbox;
  * @package    elead-lightbox
  * @author     John Farrell MacDonald <john@jfmacdonald.com>
  */
-class ELeadLightboxMailer
-{
+class ELeadLightboxMailer {
 
-    public $mincost = 3.35;
-    public $maxcost = 5.0;
-    public $replyto = 'contact@rcenergysolutions.com';
-    public $provider = 'contact@rcenergysolutions.com';
-    public $bcc = 'contact@rcenergysolutions.com';
-    private $wp = '';
-    private $email = '';
-    private $size = 0;
-    private $input = array(
-      'firstname'     => '',
-      'lastname'      => '',
-      'email'         => '',
-      'phonenumber'   => '',
-      'streetaddress' => '',
-      'zipcode'       => '',
-      'dailyavekwh'   => '',
-      'wppath'        => ''
-    );
-    private $response = array(
-      'sent'    => false,
-      'message' => ''
-    );
-    private $debug = false;
-    private $log = '/var/tmp/php_error.log';
+	private $wp = '';
 
-    function __construct()
-    {
-        foreach ($this->input as $property => $value) {
-            if (array_key_exists($property, $_POST)) {
-                $this->input[$property] = $this->sanitize($_POST[$property]);
-            }
-            $this->debug("PROPERTY $property VALUE " . $this->input[$property]);
-        }
-        if ($this->input['email']) {
-            $this->email = filter_var($this->input['email'],
-              FILTER_VALIDATE_EMAIL);
-        }
-        if ($this->input['dailyavekwh']) {
-            $this->size = floatval($this->input['dailyavekwh']);
-        }
-        $this->load_wordpress();
-    }
+	private $email = '';
 
-    private function find_wordpress_base_path()
-    {
-        $dir = dirname(__FILE__);
-        do {
-            if (file_exists($dir . "/wp-load.php")) {
-                return $dir;
-            }
-        } while ($dir = realpath("$dir/.."));
-        return '';
-    }
+	private $size = 0;
 
-    private function load_wordpress()
-    {
-        $wp = $this->input['wppath'];
-        // look for wordpress if posted wppath is invalid
-        if (!$wp || !file_exists( $wp.'wp-load.php')) {
-           $wp = $this->find_wordpress_base_path();
-        }
-        if ( $wp ) {
-            define( 'BASE_PATH', $wp."/" );
-            define('WP_USE_THEMES', false);
-            global $wp, $wp_query, $wp_the_query, $wp_rewrite, $wp_did_header;
-            require(BASE_PATH . 'wp-load.php');
-            $this->wp = $wp;
-        }
-    }
+	private $input = array(
+		'firstname'     => '',
+		'lastname'      => '',
+		'email'         => '',
+		'phonenumber'   => '',
+		'streetaddress' => '',
+		'zipcode'       => '',
+		'dailyavekwh'   => '',
+		'wppath'        => '',
+	);
 
-    function debug($string)
-    {
-        if ($this->debug) {
-            error_log($string . PHP_EOL, 3, $this->log);
-        }
-    }
+	private $response = array(
+		'sent'    => FALSE,
+		'message' => '',
+	);
 
-    function sanitize($string)
-    {
-        return htmlentities(
-          str_replace(array("\r", "\n"), array(" ", " "), strip_tags($string)),
-          ENT_QUOTES);
-    }
+	private $debug = FALSE;
 
-    function validate()
-    {
-        return $this->email && $this->size;
-    }
+	private $log = '/var/tmp/php_error.log';
 
-    function get_name()
-    {
-        $name = $this->input['firstname'] . ' ' . $this->input['lastname'];
+	function __construct() {
+		foreach ( $this->input as $property => $value ) {
+			if ( array_key_exists( $property, $_POST ) ) {
+				$this->input[ $property ] = $this->sanitize( $_POST[ $property ] );
+			}
+			$this->debug( "PROPERTY $property VALUE " . $this->input[ $property ] );
+		}
+		if ( $this->input['email'] ) {
+			$this->email = filter_var( $this->input['email'],
+				FILTER_VALIDATE_EMAIL );
+		}
+		if ( $this->input['dailyavekwh'] ) {
+			$this->size = floatval( $this->input['dailyavekwh'] );
+		}
+		$this->mincost  = 3.35;
+		$this->maxcost  = 5.0;
+		$this->provider = 'RC Energy Solutions <contact@rcenergysolutions.com>';
+		$this->header   = array(
+			'From:' . $this->provider,
+			'Reply-to:' . $this->provider,
+			'Cc:' . $this->provider,
+			'Cc:' . 'Jose Delgado <jose@datalinkseo.com>',
+		);
+		$this->load_wordpress();
+	}
 
-        return $name;
-    }
+	private function find_wordpress_base_path() {
+		$dir = dirname( __FILE__ );
+		do {
+			if ( file_exists( $dir . "/wp-load.php" ) ) {
+				return $dir;
+			}
+		} while ( $dir = realpath( "$dir/.." ) );
 
-    function get_email()
-    {
-        return $this->email;
-    }
+		return '';
+	}
 
-    function get_size()
-    {
-        return $this->size;
-    }
+	private function load_wordpress() {
+		$wp = $this->input['wppath'];
+		// look for wordpress if posted wppath is invalid
+		if ( ! $wp || ! file_exists( $wp . 'wp-load.php' ) ) {
+			$wp = $this->find_wordpress_base_path();
+		}
+		if ( $wp ) {
+			define( 'BASE_PATH', $wp . "/" );
+			define( 'WP_USE_THEMES', FALSE );
+			global $wp, $wp_query, $wp_the_query, $wp_rewrite, $wp_did_header;
+			require( BASE_PATH . 'wp-load.php' );
+			$this->wp = $wp;
+		}
+	}
 
-    function min_cost()
-    {
-        return '$' . number_format(1000 * $this->mincost * $this->size);
-    }
+	function debug( $string ) {
+		if ( $this->debug ) {
+			error_log( $string . PHP_EOL, 3, $this->log );
+		}
+	}
 
-    function max_cost()
-    {
-        return '$' . number_format(1000 * $this->maxcost * $this->size);
-    }
+	function sanitize( $string ) {
+		return htmlentities(
+			str_replace( array( "\r", "\n" ), array( " ", " " ),
+				strip_tags( $string ) ),
+			ENT_QUOTES );
+	}
 
-    function get_message()
-    {
-        $name    = $this->get_name();
-        $size    = $this->get_size();
-        $min     = $this->min_cost();
-        $max     = $this->max_cost();
-        $message = <<< EOM
+	function validate() {
+		return $this->email && $this->size;
+	}
+
+	function get_name() {
+		$name = $this->input['firstname'] . ' ' . $this->input['lastname'];
+
+		return $name;
+	}
+
+	function get_email() {
+		return $this->email;
+	}
+
+	function get_size() {
+		return $this->size;
+	}
+
+	function min_cost() {
+		return '$' . number_format( 1000 * $this->mincost * $this->size );
+	}
+
+	function max_cost() {
+		return '$' . number_format( 1000 * $this->maxcost * $this->size );
+	}
+
+	function get_message() {
+		$name    = $this->get_name();
+		$size    = $this->get_size();
+		$min     = $this->min_cost();
+		$max     = $this->max_cost();
+		$message = <<< EOM
 		
 Hello {$name},
 
@@ -166,56 +165,54 @@ contact@rcenergysolutions.com
 
 EOM;
 
-        return $message;
-    }
+		return $message;
+	}
 
-    // send email
-    function send()
-    {
-        $this->response['sent'] = false;
-        if (!$this->validate()) {
-            if ($this->size) {
-                $this->response['message'] = 'Please enter a valid email address.';
-                $this->debug('invalid email address');
-            } elseif ($this->email) {
-                $this->response['message'] = 'Please enter daily average kWh.';
-                $this->debug('missing data entry');
-            } else {
-                $this->response['message'] = 'invalid email and missing entry.';
-            }
+	// send email
+	function send() {
+		$this->response['sent'] = FALSE;
+		if ( ! $this->validate() ) {
+			if ( $this->size ) {
+				$this->response['message'] = 'Please enter a valid email address.';
+				$this->debug( 'invalid email address' );
+			} elseif ( $this->email ) {
+				$this->response['message'] = 'Please enter daily average kWh.';
+				$this->debug( 'missing data entry' );
+			} else {
+				$this->response['message'] = 'invalid email and missing entry.';
+			}
 
-            return $this->response;
-        }
+			return $this->response;
+		}
 
-        // email header and body
-        $address = $this->email;
-        $subject = "Your solar estimate";
-        $header  = "From: {$this->provider}\r\n";
-        $header .= "Reply-To: {$this->replyto}\r\n";
-        $header .= "Bcc: {$this->bcc}\r\n";
-
-        $message = $this->get_message();
-        $this->debug("MESSAGE: " . $message);
+		// email header and body
+		$address = $this->email;
+		$subject = "Your solar estimate";
+		$message = $this->get_message();
+		$this->debug( "MESSAGE: " . $message );
 
 
-        if ($this->wp) {
-            $this->debug("MAILER: wp_mail" . PHP_EOL);
-            $this->response['sent'] = wp_mail( $address, $subject, $message, $header);
-        } else {
-            $this->debug("MAILER: mail" . PHP_EOL);
-            $this->response['sent'] = mail( $address, $subject, $message, $header);
-        }
+		if ( $this->wp ) {
+			$this->debug( "MAILER: wp_mail" . PHP_EOL );
+			$this->response['sent'] = wp_mail( $address, $subject, $message,
+				$this->header );
+		} else {
+			$header = join('\n\r', $this->header);
+			$this->debug( "MAILER: mail" . PHP_EOL );
+			$this->response['sent'] = mail( $address, $subject, $message,
+				$header );
+		}
 
-        if (!$this->response['sent']) {
-            $this->response['message'] = 'Not able to send email.';
-            $this->debug('Not able to send email.');
-        } else {
-            $this->response['message'] = 'Please check your email for your solar estimate.';
-            $this->debug('email sent');
-        }
+		if ( ! $this->response['sent'] ) {
+			$this->response['message'] = 'Not able to send email.';
+			$this->debug( 'Not able to send email.' );
+		} else {
+			$this->response['message'] = 'Please check your email for your solar estimate.';
+			$this->debug( 'email sent' );
+		}
 
-        return $this->response;
-    }
+		return $this->response;
+	}
 
 }
 
@@ -223,8 +220,8 @@ $mailer = new ELeadLightboxMailer();
 
 $response = $mailer->send();
 
-echo json_encode($response);
+echo json_encode( $response );
 
 $status = $response['sent'] ? 0 : 1;
-exit($status);
+exit( $status );
 
