@@ -59,7 +59,7 @@ class ELeadLightboxMailer {
 		$this->header   = array(
 			'From: ' . $this->provider,
 			'Reply-to: ' . $this->provider,
-			'Bcc: ' . $this->provider,
+			'Bcc: ' . 'justin@rcenergysolutions.com',
 			'Bcc: ' . 'jose@datalinkseo.com',
 		);
 		$this->load_wordpress();
