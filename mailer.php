@@ -55,14 +55,16 @@ class ELeadLightboxMailer {
 		}
 		$this->mincost  = 3.35;
 		$this->maxcost  = 5.0;
-		$this->provider = 'contact@rcenergysolutions.com';
+		$this->from_name = 'RC Energy Solutions';
+		$this->from_email = 'contact@rcenergysolutions.com';
 		$this->header   = array(
-			'From: ' . $this->provider,
-			'Reply-to: ' . $this->provider,
+			'Reply-to: ' . $this->from_email,
 			'Bcc: ' . 'justin@rcenergysolutions.com',
 			'Bcc: ' . 'jose@datalinkseo.com',
 		);
 		$this->load_wordpress();
+		add_filter('wp_mail_from', array($this, 'mail_from'));
+		add_filter('wp_mail_from_name', array($this, 'mail_from_name'));
 	}
 
 	private function find_wordpress_base_path() {
@@ -128,6 +130,15 @@ class ELeadLightboxMailer {
 
 	function max_cost() {
 		return '$' . number_format( 1000 * $this->maxcost * $this->size );
+	}
+
+
+	function mail_from() {
+		return $this->from_email;
+	}
+
+	function mail_from_name() {
+		return $this->from_name;
 	}
 
 	function get_message() {
