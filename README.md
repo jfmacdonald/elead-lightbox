@@ -1,5 +1,7 @@
 # WordPress plugin *eLead Lightbox*
 
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 Plugin developed by [John Farrell MacDonald](https://jfmacdonald.com) for [RC Energy Solutions](https://rcenergysolutions.com),
 a client of [DataLink SEO](http://datalinkseo.com).
 
